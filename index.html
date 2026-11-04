@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#7869a0" />
+    <title>Wedding Invitation</title>
+
+    <!-- The preview shown when the link is shared on WhatsApp, Facebook etc.
+         Edit these two lines by hand: link previews cannot read js/config.js. -->
+    <meta property="og:title" content="Anmol & Rojina are getting married" />
+    <meta property="og:description" content="Sunday, Mangsir 27, 2083. You are cordially invited." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500&family=Playfair+Display:wght@400;700&family=Viaoda+Libre&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="is-sealed">
+    <noscript><p class="noscript">Please turn on JavaScript to view this invitation.</p></noscript>
+
+    <!-- ============ Envelope cover ============ -->
+    <div class="cover" id="cover">
+      <div class="cover__inner">
+        <p class="label" data-text="coverLine"></p>
+        <h1 class="cover__names" data-names></h1>
+        <p class="cover__date" data-long-date></p>
+
+        <div class="envelope" id="envelope">
+          <div class="envelope__back"></div>
+          <img class="envelope__photo" id="cover-photo" alt="" />
+          <div class="envelope__pocket"></div>
+          <div class="envelope__flap"><span></span></div>
+          <button class="seal" id="seal" type="button" aria-label="Open the invitation">
+            <span class="seal__initials" data-text="initials"></span>
+          </button>
+          <img class="envelope__floral envelope__floral--a" src="assets/art/flower1-decoration.webp" alt="" />
+          <img class="envelope__floral envelope__floral--b" src="assets/art/flower1-decoration.webp" alt="" />
+        </div>
+
+        <p class="cover__guest">
+          <span class="label">Cordially inviting</span>
+          <strong id="guest-name"></strong>
+        </p>
+        <button class="btn" id="open-btn" type="button">Open invitation</button>
+      </div>
+    </div>
+
+    <button class="music" id="music-btn" type="button" aria-pressed="false" aria-label="Play music" hidden>
+      <svg class="music__note" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" /></svg>
+      <span class="music__bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+
+    <!-- ============ Invitation ============ -->
+    <main class="sheet" id="sheet" inert>
+      <header class="hero">
+        <img class="hero__ghost" src="assets/art/flower-decoration.webp" alt="" />
+        <img class="hero__house" src="assets/art/house-background.webp" alt="" />
+        <img class="deco deco--hero-a" src="assets/art/flower1-decoration.webp" alt="" />
+        <img class="deco deco--hero-b" src="assets/art/flower-decoration.webp" alt="" />
+
+        <p class="hero__kicker">Save the date</p>
+
+        <div class="tucked">
+          <img class="tucked__back" src="assets/art/envelope-background.webp" alt="" />
+          <div class="tucked__photo"><img id="hero-photo" alt="The couple" /></div>
+          <img class="tucked__floral" src="assets/art/flower3-decoration.webp" alt="" />
+          <img class="tucked__front" src="assets/art/envelope-cover.webp" alt="" />
+        </div>
+
+        <h2 class="hero__names">
+          <span data-text="partner1"></span>
+          <span class="hero__and">and</span>
+          <span data-text="partner2"></span>
+        </h2>
+      </header>
+
+      <!-- Ceremony info -->
+      <section class="card-wrap reveal" aria-labelledby="ceremony-title">
+        <img class="deco deco--right" src="assets/art/flower1-decoration.webp" alt="" loading="lazy" />
+        <div class="card">
+          <h2 class="heading" id="ceremony-title">Ceremony info</h2>
+          <div class="families" id="families"></div>
+          <p class="card__text" data-text="invitationText"></p>
+          <div class="couple">
+            <h3 class="couple__name" data-text="partner1Full"></h3>
+            <span class="couple__and">and</span>
+            <h3 class="couple__name" data-text="partner2Full"></h3>
+          </div>
+          <figure class="verse">
+            <blockquote class="verse__text" data-text="verseText"></blockquote>
+            <figcaption class="verse__ref" data-text="verseReference"></figcaption>
+          </figure>
+          <div id="ceremony-date"></div>
+          <div class="events" id="events"></div>
+        </div>
+      </section>
+
+      <!-- Photo gallery -->
+      <section class="gallery reveal" aria-labelledby="gallery-title">
+        <h2 class="heading" id="gallery-title">Photo gallery</h2>
+        <div class="gallery__stage" id="gallery-stage"></div>
+        <div class="gallery__controls">
+          <button class="gallery__nav" id="gallery-prev" type="button" aria-label="Previous photo">&#8249;</button>
+          <span class="gallery__count" id="gallery-count" aria-live="polite"></span>
+          <button class="gallery__nav" id="gallery-next" type="button" aria-label="Next photo">&#8250;</button>
+        </div>
+      </section>
+
+      <!-- Countdown and calendar -->
+      <section class="card-wrap reveal" aria-labelledby="countdown-title">
+        <img class="deco deco--left" src="assets/art/flower1-decoration.webp" alt="" loading="lazy" />
+        <div class="card">
+          <h2 class="heading" id="countdown-title">Countdown</h2>
+          <div class="countdown" id="countdown" role="timer" aria-label="Time until the wedding"></div>
+
+          <div class="calendar" id="calendar"></div>
+          <a class="card__link" id="add-calendar" target="_blank" rel="noopener">Add to calendar</a>
+        </div>
+      </section>
+
+      <div class="rsvp-cta reveal" id="rsvp-cta" hidden>
+        <button class="btn" id="rsvp-open" type="button">Confirm attendance</button>
+      </div>
+
+      <!-- Venue -->
+      <section class="venue reveal" aria-labelledby="venue-title">
+        <h2 class="heading" id="venue-title">Wedding venue</h2>
+        <p class="venue__address" id="venue-address"></p>
+        <div class="venue__tabs" id="map-tabs"></div>
+        <div class="venue__map" id="map-frame"></div>
+        <a class="venue__directions" id="map-directions" target="_blank" rel="noopener" hidden>Get directions</a>
+      </section>
+
+      <!-- Schedule -->
+      <section class="card-wrap reveal" aria-labelledby="schedule-title">
+        <img class="deco deco--right deco--high" src="assets/art/flower1-decoration.webp" alt="" loading="lazy" />
+        <div class="card">
+          <h2 class="heading" id="schedule-title">Wedding day schedule</h2>
+          <ol class="timeline" id="timeline"></ol>
+        </div>
+      </section>
+
+      <!-- Guest book -->
+      <section class="card-wrap reveal" aria-labelledby="wishes-title">
+        <div class="card card--white">
+          <h2 class="panel__title" id="wishes-title">Guestbook</h2>
+          <p class="panel__intro">Leave a blessing or a few kind words for the couple.</p>
+
+          <p class="notice" id="wish-demo" hidden>
+            Demo mode: wishes stay in this browser until the database is connected.
+          </p>
+
+          <form id="wish-form" novalidate>
+            <label class="panel__label" for="wish-name">Your name</label>
+            <input class="panel__input" id="wish-name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Enter your name" required />
+
+            <label class="panel__label" for="wish-message">Your wish</label>
+            <textarea class="panel__input" id="wish-message" name="message" rows="3" maxlength="500" placeholder="Write your wish" required></textarea>
+            <p class="form__count" id="wish-count" aria-live="off">0 / 500</p>
+
+            <!-- Hidden from people. Bots that fill it in are ignored. -->
+            <div class="form__trap" aria-hidden="true">
+              <label for="wish-website">Website</label>
+              <input id="wish-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <p class="panel__status" id="wish-status" role="status"></p>
+            <button class="btn btn--block panel__submit" id="wish-submit" type="submit" disabled>Send wishes</button>
+          </form>
+
+          <div class="wishes" id="wish-list" aria-live="polite" aria-label="Wishes"></div>
+        </div>
+      </section>
+
+      <!-- Gift -->
+      <section class="gift reveal" id="gift-section" aria-labelledby="gift-title">
+        <h2 class="heading" id="gift-title">With gratitude</h2>
+        <p class="gift__note" id="gift-note"></p>
+        <div class="gift__qr" id="gift-qr"></div>
+        <a class="gift__save" id="gift-save" download hidden>Save QR code</a>
+      </section>
+
+      <footer class="closing">
+        <p class="closing__text" data-text="closingText"></p>
+        <figure class="verse closing__verse">
+          <blockquote class="verse__text" data-text="closingVerseText"></blockquote>
+          <figcaption class="verse__ref" data-text="closingVerseReference"></figcaption>
+        </figure>
+        <img class="closing__floral" src="assets/art/flowerbottom-decoration.webp" alt="" loading="lazy" />
+      </footer>
+    </main>
+
+    <!-- ============ Pop-ups ============ -->
+    <dialog class="popup popup--rsvp" id="rsvp-dialog" aria-labelledby="rsvp-dialog-title">
+      <button class="rsvp__close" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+
+      <form class="rsvp" id="rsvp-form" novalidate>
+        <h2 class="panel__title" id="rsvp-dialog-title">Confirm your attendance</h2>
+        <p class="panel__intro">Your presence would be an honor. Please RSVP so we can prepare the warmest welcome for you.</p>
+
+        <label class="panel__label" for="rsvp-name">Your name</label>
+        <input class="panel__input" id="rsvp-name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Enter your name" required />
+
+        <fieldset class="rsvp__choices">
+          <legend class="panel__label">Will you attend?</legend>
+          <label class="rsvp__choice">
+            <input type="radio" name="attending" value="yes" required />
+            <span class="rsvp__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+            I will attend
+          </label>
+          <label class="rsvp__choice">
+            <input type="radio" name="attending" value="no" />
+            <span class="rsvp__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></span>
+            Sorry, I can't make it
+          </label>
+        </fieldset>
+
+        <div class="form__trap" aria-hidden="true">
+          <label for="rsvp-website">Website</label>
+          <input id="rsvp-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <p class="panel__status" id="rsvp-status" role="status"></p>
+        <button class="btn btn--block panel__submit" id="rsvp-submit" type="submit" disabled>Confirm</button>
+      </form>
+
+      <div class="rsvp__done" id="rsvp-done" tabindex="-1" hidden>
+        <span class="rsvp__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+        <p class="panel__title">Response received</p>
+        <p class="panel__intro" id="rsvp-done-text" role="status"></p>
+      </div>
+    </dialog>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+      <button class="lightbox__close" id="lb-close" type="button" aria-label="Close">&times;</button>
+      <button class="lightbox__nav lightbox__nav--prev" id="lb-prev" type="button" aria-label="Previous photo">&#8249;</button>
+      <img id="lb-img" alt="" />
+      <button class="lightbox__nav lightbox__nav--next" id="lb-next" type="button" aria-label="Next photo">&#8250;</button>
+    </dialog>
+
+    <script src="js/config.js"></script>
+    <script src="js/wishes.js"></script>
+    <script src="js/rsvp.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

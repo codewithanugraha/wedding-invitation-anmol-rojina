@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "invitation",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "cd /Users/anugrahaacharya/Documents/wedding-invitation && exec /usr/bin/python3 -m http.server 8123"],
+      "port": 8123
+    }
+  ]
+}
