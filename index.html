@@ -7,6 +7,9 @@
     <meta name="theme-color" content="#7869a0" />
     <title>Wedding Invitation</title>
 
+    <!-- Keeps this private invitation out of search results, previews and archives. -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai" />
+
     <!-- The preview shown when the link is shared on WhatsApp, Facebook etc.
          Edit these two lines by hand: link previews cannot read js/config.js. -->
     <meta property="og:title" content="Anmol & Rojina are getting married" />
@@ -39,8 +42,8 @@
           <button class="seal" id="seal" type="button" aria-label="Open the invitation">
             <span class="seal__initials" data-text="initials"></span>
           </button>
-          <img class="envelope__floral envelope__floral--a" src="assets/art/flower1-decoration.webp" alt="" />
-          <img class="envelope__floral envelope__floral--b" src="assets/art/flower1-decoration.webp" alt="" />
+          <img class="envelope__floral envelope__floral--a" src="assets/art/floral-corner.webp" alt="" />
+          <img class="envelope__floral envelope__floral--b" src="assets/art/floral-corner.webp" alt="" />
         </div>
 
         <p class="cover__guest">
@@ -59,18 +62,18 @@
     <!-- ============ Invitation ============ -->
     <main class="sheet" id="sheet" inert>
       <header class="hero">
-        <img class="hero__ghost" src="assets/art/flower-decoration.webp" alt="" />
-        <img class="hero__house" src="assets/art/house-background.webp" alt="" />
-        <img class="deco deco--hero-a" src="assets/art/flower1-decoration.webp" alt="" />
-        <img class="deco deco--hero-b" src="assets/art/flower-decoration.webp" alt="" />
+        <img class="hero__ghost" src="assets/art/floral-branch.webp" alt="" />
+        <img class="hero__house" src="assets/art/manor-sketch.webp" alt="" />
+        <img class="deco deco--hero-a" src="assets/art/floral-corner.webp" alt="" />
+        <img class="deco deco--hero-b" src="assets/art/floral-branch.webp" alt="" />
 
         <p class="hero__kicker">Save the date</p>
 
         <div class="tucked">
-          <img class="tucked__back" src="assets/art/envelope-background.webp" alt="" />
+          <img class="tucked__back" src="assets/art/envelope-back.webp" alt="" />
           <div class="tucked__photo"><img id="hero-photo" alt="The couple" /></div>
-          <img class="tucked__floral" src="assets/art/flower3-decoration.webp" alt="" />
-          <img class="tucked__front" src="assets/art/envelope-cover.webp" alt="" />
+          <img class="tucked__floral" src="assets/art/floral-bouquet.webp" alt="" />
+          <img class="tucked__front" src="assets/art/envelope-front.webp" alt="" />
         </div>
 
         <h2 class="hero__names">
@@ -82,7 +85,7 @@
 
       <!-- Ceremony info -->
       <section class="card-wrap reveal" aria-labelledby="ceremony-title">
-        <img class="deco deco--right" src="assets/art/flower1-decoration.webp" alt="" loading="lazy" />
+        <img class="deco deco--right" src="assets/art/floral-corner.webp" alt="" loading="lazy" />
         <div class="card">
           <h2 class="heading" id="ceremony-title">Ceremony info</h2>
           <div class="families" id="families"></div>
@@ -114,7 +117,7 @@
 
       <!-- Countdown and calendar -->
       <section class="card-wrap reveal" aria-labelledby="countdown-title">
-        <img class="deco deco--left" src="assets/art/flower1-decoration.webp" alt="" loading="lazy" />
+        <img class="deco deco--left" src="assets/art/floral-corner.webp" alt="" loading="lazy" />
         <div class="card">
           <h2 class="heading" id="countdown-title">Countdown</h2>
           <div class="countdown" id="countdown" role="timer" aria-label="Time until the wedding"></div>
@@ -139,7 +142,7 @@
 
       <!-- Schedule -->
       <section class="card-wrap reveal" aria-labelledby="schedule-title">
-        <img class="deco deco--right deco--high" src="assets/art/flower1-decoration.webp" alt="" loading="lazy" />
+        <img class="deco deco--right deco--high" src="assets/art/floral-corner.webp" alt="" loading="lazy" />
         <div class="card">
           <h2 class="heading" id="schedule-title">Wedding day schedule</h2>
           <ol class="timeline" id="timeline"></ol>
@@ -192,7 +195,7 @@
           <blockquote class="verse__text" data-text="closingVerseText"></blockquote>
           <figcaption class="verse__ref" data-text="closingVerseReference"></figcaption>
         </figure>
-        <img class="closing__floral" src="assets/art/flowerbottom-decoration.webp" alt="" loading="lazy" />
+        <img class="closing__floral" src="assets/art/floral-footer.webp" alt="" loading="lazy" />
       </footer>
     </main>
 
@@ -246,6 +249,7 @@
       <button class="lightbox__nav lightbox__nav--next" id="lb-next" type="button" aria-label="Next photo">&#8250;</button>
     </dialog>
 
+    <script src="js/env.js"></script>
     <script src="js/config.js"></script>
     <script src="js/wishes.js"></script>
     <script src="js/rsvp.js"></script>

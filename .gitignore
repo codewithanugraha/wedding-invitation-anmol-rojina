@@ -1,0 +1,11 @@
+.DS_Store
+.claude/
+
+# Environment values and the file generated from them
+.env
+.env.*
+!.env.example
+js/env.js
+
+# Deployment build folder
+_site/

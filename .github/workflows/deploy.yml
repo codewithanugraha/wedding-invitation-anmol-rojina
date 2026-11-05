@@ -1,0 +1,42 @@
+# Publishes the invitation to GitHub Pages on every push to main.
+# It needs the repository secrets SUPABASE_URL and SUPABASE_KEY, and
+# Settings > Pages > Source set to "GitHub Actions".
+name: Deploy invitation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create js/env.js from the repository secrets
+        run: node scripts/make-env.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      - name: Collect only the files the site needs
+        run: |
+          mkdir _site
+          cp -R index.html robots.txt assets css js _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

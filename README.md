@@ -25,7 +25,7 @@ Until you do this, wishes are saved only in the browser they were written in, th
 1. Create a free project at [supabase.com](https://supabase.com).
 2. Open **SQL Editor**, paste in everything from `supabase-setup.sql`, and press **Run**.
 3. Open the project's API settings and copy the **Project URL** and the **publishable** key (older projects call it the **anon** key).
-4. Paste both into `supabaseUrl` and `supabaseKey` at the bottom of `js/config.js`.
+4. Copy `.env.example` to `.env`, paste both values in, and run `node scripts/make-env.js`. To publish, add them as the GitHub secrets described under "Publish".
 
 The publishable key is designed to be public, and the database rules limit guests to reading visible wishes and adding new ones. **Never use the `secret` or `service_role` key here.**
 
@@ -50,10 +50,11 @@ To update the site later, drag the folder in again.
 **GitHub Pages**
 
 1. Create a repository on GitHub and upload these files.
-2. Go to **Settings**, then **Pages**, and choose **Deploy from a branch**.
-3. Pick `main` and `/ (root)`, then save.
+2. Go to **Settings**, then **Secrets and variables**, then **Actions**, and add two repository secrets: `SUPABASE_URL` and `SUPABASE_KEY`.
+3. Go to **Settings**, then **Pages**, and set **Source** to **GitHub Actions**.
+4. Push to `main`. The site then publishes itself each time.
 
-Everything you upload to a public repository can be read by anyone, including anything in `js/config.js`.
+The publishable key still reaches every guest's browser, because the forms need it. `.env` keeps it out of the repository, but the database rules are what protect your data. Everything else you upload to a public repository can be read by anyone.
 
 ## 4. Send personal links
 
@@ -69,5 +70,5 @@ https://your-site.netlify.app/?name=Pawan%20Gurung
 - **QR code:** anyone with the link can see and save the QR code in the gift section.
 - **Music:** only use a track you have the right to share. Browsers start sound only after a tap, so it begins when the guest opens the envelope. Change how loud it gets with `musicVolume` in `js/config.js`.
 - **Auto-scroll:** the page starts scrolling slowly about 4.5 seconds after the invitation opens, while the music plays. It pauses when a guest scrolls, taps or types and carries on after 4 seconds of stillness, and it stops while the music is muted. Change the speed with `autoScrollSpeed` in `js/config.js`, or use `0` to turn it off.
-- **Artwork:** `floral-corner.webp`, `floral-spray.webp`, `seal.webp`, `paper-texture.webp` and `pavilion.svg` in `assets/art` were created for this project. Anything else you add there needs to be yours to use.
+- **Artwork:** the images in `assets/art` come from the licensed template, so keep your use within that licence.
 # wedding-invitation-anmol-rojina

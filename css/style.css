@@ -283,7 +283,7 @@ textarea {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: url("../assets/art/seal.webp") center / contain no-repeat;
+  background: url("../assets/art/wax-seal.webp") center / contain no-repeat;
   filter: drop-shadow(0 1px 2px rgba(46, 36, 80, 0.22)) drop-shadow(0 5px 12px rgba(46, 36, 80, 0.2));
   transform: translate(-50%, -50%);
   cursor: pointer;
@@ -422,7 +422,7 @@ textarea {
   margin-inline: auto;
   overflow: hidden;
   background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)),
-    #f6f6f7 url("../assets/art/paper.webp") center top / 100% auto;
+    #f6f6f7 url("../assets/art/paper-background.webp") center top / 100% auto;
   box-shadow: 0 0 60px rgba(46, 36, 80, 0.08);
 }
 

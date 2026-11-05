@@ -1,0 +1,20 @@
+# Private wedding invitation: not for search engines, archives or AI crawlers.
+#
+# Search engines may fetch the page only so they can read its "noindex" tag.
+# Blocking them here would hide that tag and could leave the link listed.
+User-agent: Googlebot
+User-agent: Bingbot
+Allow: /
+
+# Link previews when the invitation is shared in chat apps.
+User-agent: facebookexternalhit
+User-agent: WhatsApp
+User-agent: TelegramBot
+User-agent: Twitterbot
+User-agent: LinkedInBot
+User-agent: Slackbot
+Allow: /
+
+# Everyone else, including AI crawlers and archives.
+User-agent: *
+Disallow: /

@@ -61,8 +61,8 @@ window.WEDDING = {
   /* Photos. Put your pictures in assets/photos and list them here.
      coverPhoto: rises out of the envelope when it opens (5:4 landscape).
      heroPhoto: the tilted photo at the top of the page (4:5 portrait). */
-  coverPhoto: "assets/photos/couple-2.png",
-  heroPhoto: "assets/photos/couple-1.png",
+  coverPhoto: "assets/photos/couple-landscape.png",
+  heroPhoto: "assets/photos/couple-portrait.png",
   album: [
     "assets/photos/album-1.svg",
     "assets/photos/album-2.svg",
@@ -74,7 +74,7 @@ window.WEDDING = {
 
   /* Optional background music: put an .mp3 you have the rights to use in
      assets/music and write its path here. Leave empty for no music. */
-  music: "assets/music/'Sanga Sangai' Wedding Song 2017 - Adrian Dewan Sophia Dewan.mp3",
+  music: "assets/music/sanga-sangai-wedding-song.mp3",
 
   /* How loud the music gets after fading in, from 0.1 (very quiet) to 1 (full). */
   musicVolume: 0.4,
@@ -89,7 +89,7 @@ window.WEDDING = {
   gift: {
     message:
       "We are thankful for your prayers and your presence. If you would also like to support the ceremony, you are welcome to do so here.",
-    qrImage: "assets/art/qr.jpeg",
+    qrImage: "assets/art/gift-qr-code.jpeg",
   },
 
   closingText: "Your presence would be the greatest gift we could receive!",
@@ -99,8 +99,8 @@ window.WEDDING = {
   closingVerseReference: "Psalm 118:24",
 
   /* Guest book and RSVP database (see README.md).
-     Until these are filled in, wishes are saved only in your own browser
-     and the RSVP button is hidden. */
-  supabaseUrl: "https://eskmwngenoepqiykglnt.supabase.co",
-  supabaseKey: "sb_publishable_HEiV8qG-P2SvVpQw7aNMYg_GkYbEi9l", // the public key only, never the secret / service_role key
+     These come from js/env.js, which is generated from your .env file.
+     Without it, wishes stay in your own browser and the RSVP button is hidden. */
+  supabaseUrl: (window.ENV || {}).SUPABASE_URL || "",
+  supabaseKey: (window.ENV || {}).SUPABASE_KEY || "",
 };

@@ -449,7 +449,7 @@
     const frame = document.createElement("iframe");
     frame.title = `Map to ${event.venue}`;
     frame.loading = "lazy";
-    frame.referrerPolicy = "no-referrer-when-downgrade";
+    frame.referrerPolicy = "strict-origin-when-cross-origin"; // keeps ?name= out of what Google receives
     frame.src = mapsEmbed(event.mapQuery);
     $("map-frame").replaceChildren(frame);
     $("map-directions").href = mapsDirections(event.mapQuery);
