@@ -84,11 +84,11 @@
     .trim()
     .slice(0, 60);
 
-  /* "Dear" and the name, written on the envelope only when the link carries a
+  /* The name, written on the envelope only when the link carries a
      name. A long name is written smaller, and the very longest wrap. */
   if (guestParam) {
     const envelopeName = $("envelope-name");
-    envelopeName.textContent = `Dear\n${guestParam}`;
+    envelopeName.textContent = guestParam;
     envelopeName.hidden = false;
     const fitEnvelopeName = () => {
       envelopeName.style.removeProperty("--name-fit");

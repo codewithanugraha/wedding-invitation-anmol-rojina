@@ -45,7 +45,7 @@ To test the forms on your computer, put the same values in `.env` and run `npx v
 
 ## 4. Send personal links
 
-Add a guest's name to the end of your link. The envelope then says "Dear Pawan Gurung", and the name is already filled in on the guest book and RSVP forms. Write `%20` for each space, because WhatsApp and other apps cut a link off at a real space:
+Add a guest's name to the end of your link. The envelope then says "Pawan Gurung", and the name is already filled in on the guest book and RSVP forms. Write `%20` for each space, because WhatsApp and other apps cut a link off at a real space:
 
 ```
 https://your-site.vercel.app/?name=Pawan%20Gurung
