@@ -71,8 +71,7 @@ textarea {
   outline-offset: 3px;
 }
 
-.card:not(.card--white) :focus-visible,
-.lightbox :focus-visible {
+.card:not(.card--white) :focus-visible {
   outline-color: #fff;
 }
 
@@ -806,121 +805,230 @@ textarea {
   color: var(--on-violet-soft);
 }
 
-/* Phones: the same rhythm as desktop, scaled down.
-   Between groups: 28px on desktop, 24px here. Inside a group: 2 to 6px.
-   Type, desktop then here: labels 12/10, text 18/15, time 24/20, names 42/28, date 56/44. */
+/* Ceremony card: four quiet groups with generous space between them.
+   1. Parents   2. Invitation and the couple   3. Verse   4. Date and service
+   Brightest and largest are the names and date. Labels are small and warm;
+   supporting lines are slightly dimmed. */
+.card:not(.card--white) {
+  --dim: rgba(255, 255, 255, 0.88);
+  --warm: #f7efd8;
+  --hairline: rgba(255, 255, 255, 0.24);
+  padding: 44px 32px 46px;
+}
+
+.card:not(.card--white) .heading {
+  color: var(--warm);
+}
+
+.card--ceremony .families {
+  margin-top: 24px;
+  column-gap: 20px;
+}
+
+.card--ceremony .families__rule {
+  height: 56px;
+  background: var(--hairline);
+}
+
+.card--ceremony .family__label,
+.card--ceremony .event__title,
+.card--ceremony .verse__ref,
+.card--ceremony .datebox__side {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--warm);
+}
+
+.card--ceremony .family__label {
+  margin-bottom: 7px;
+}
+
+.card--ceremony .family__name {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--dim);
+}
+
+.card--ceremony .card__text {
+  margin-top: 40px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.card--ceremony .couple {
+  margin-top: 18px;
+}
+
+.card--ceremony .couple__name {
+  font-size: 40px;
+  line-height: 1.12;
+}
+
+.card--ceremony .couple__and {
+  margin-block: 6px;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.card--ceremony .verse {
+  max-width: 300px;
+  margin-top: 40px;
+}
+
+.card--ceremony .verse__text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.card--ceremony .verse__ref {
+  margin-top: 10px;
+}
+
+.card--ceremony .datebox {
+  column-gap: 18px;
+  max-width: 340px;
+  margin-top: 40px;
+}
+
+.card--ceremony .datebox__day {
+  font-size: 52px;
+}
+
+.card--ceremony .datebox__side {
+  padding: 9px 0;
+  border-color: var(--hairline);
+}
+
+.card--ceremony .events {
+  margin-top: 22px;
+}
+
+.card--ceremony .event__time {
+  margin-top: 8px;
+  font-size: 22px;
+}
+
+.card--ceremony .event__venue {
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.card--ceremony .event__address {
+  margin-top: 3px;
+  font-size: 15px;
+  color: var(--dim);
+}
+
 @media (max-width: 480px) {
   .card:not(.card--white) {
-    padding: 28px 16px 30px;
+    padding: 34px 16px 36px;
   }
 
-  .card .heading {
-    font-size: 19px;
+  .card--ceremony .families {
+    margin-top: 20px;
+    column-gap: 10px;
   }
 
-  .families {
-    column-gap: 8px;
-    margin-top: 18px;
-  }
-
-  .families__rule {
+  .card--ceremony .families__rule {
     height: 48px;
   }
 
-  .family__label {
-    margin-bottom: 5px;
+  .card--ceremony .family__label,
+  .card--ceremony .event__title,
+  .card--ceremony .verse__ref,
+  .card--ceremony .datebox__side {
     font-size: 10px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
   }
 
-  .family__name {
-    font-size: 15px;
+  .card--ceremony .family__label {
+    margin-bottom: 5px;
+  }
+
+  .card--ceremony .family__name {
+    font-size: 14.5px;
     line-height: 1.35;
   }
 
-  .card__text {
-    margin-top: 24px;
+  .card--ceremony .card__text {
+    margin-top: 32px;
     font-size: 15px;
-    line-height: 1.4;
-    color: var(--on-violet-soft);
+    line-height: 1.45;
   }
 
-  .couple {
-    margin-top: 12px;
+  .card--ceremony .couple {
+    margin-top: 14px;
   }
 
-  .couple__name {
+  .card--ceremony .couple__name {
     font-size: 28px;
-    line-height: 1.15;
   }
 
-  .couple__and {
-    margin-block: 2px;
+  .card--ceremony .couple__and {
+    margin-block: 4px;
+    font-size: 14px;
+  }
+
+  .card--ceremony .verse {
+    margin-top: 32px;
+  }
+
+  .card--ceremony .verse__text {
     font-size: 15px;
+    line-height: 1.45;
   }
 
-  .verse {
-    margin-top: 24px;
+  .card--ceremony .verse__ref {
+    margin-top: 8px;
   }
 
-  .verse__text {
-    font-size: 15px;
-    line-height: 1.4;
-  }
-
-  .verse__ref {
-    margin-top: 6px;
-    font-size: 10px;
-  }
-
-  .datebox {
+  .card--ceremony .datebox {
     column-gap: 12px;
-    margin-top: 24px;
+    margin-top: 32px;
   }
 
-  .datebox__day {
+  .card--ceremony .datebox__day {
     font-size: 44px;
   }
 
-  .datebox__side {
+  .card--ceremony .datebox__side {
     padding: 7px 0;
-    font-size: 10px;
     letter-spacing: 0.06em;
     white-space: nowrap;
   }
 
-  .events {
-    margin-top: 24px;
+  .card--ceremony .events {
+    margin-top: 18px;
   }
 
-  .event__title {
-    font-size: 10px;
-  }
-
-  .event__time {
-    margin-top: 4px;
+  .card--ceremony .event__time {
+    margin-top: 6px;
     font-size: 20px;
   }
 
-  .event__venue {
+  .card--ceremony .event__venue {
     margin-top: 4px;
     font-size: 15px;
   }
 
-  .event__address {
-    margin-top: 2px;
+  .card--ceremony .event__address {
     font-size: 14px;
   }
 }
 
 /* The smallest phones: keeps each parent's name on one line. */
 @media (max-width: 340px) {
-  .families {
+  .card--ceremony .families {
     column-gap: 5px;
   }
 
-  .family__name {
-    font-size: 13.5px;
+  .card--ceremony .family__name {
+    font-size: 13px;
   }
 }
 
@@ -1046,6 +1154,10 @@ textarea {
   transition: transform 0.8s ease, opacity 0.8s ease;
 }
 
+.gallery__item.is-current {
+  cursor: default;
+}
+
 .gallery__item img {
   width: 100%;
   height: 100%;
@@ -1082,70 +1194,6 @@ textarea {
   text-align: center;
   font-size: 16px;
   font-variant-numeric: lining-nums tabular-nums;
-}
-
-.lightbox {
-  width: 100vw;
-  max-width: none;
-  height: 100vh;
-  height: 100dvh;
-  max-height: none;
-  margin: 0;
-  padding: 16px;
-  border: 0;
-  background: rgba(25, 16, 44, 0.93);
-  color: #fff;
-}
-
-.lightbox[open] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lightbox::backdrop {
-  background: transparent;
-}
-
-.lightbox img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 12px;
-  object-fit: contain;
-}
-
-.lightbox button {
-  position: absolute;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
-  font-size: 30px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.lightbox__close {
-  top: 14px;
-  right: 14px;
-}
-
-.lightbox__nav {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.lightbox__nav--prev {
-  left: 12px;
-}
-
-.lightbox__nav--next {
-  right: 12px;
 }
 
 /* ---------- RSVP button ---------- */
@@ -1789,6 +1837,239 @@ textarea.panel__input {
 
 .music.is-playing .music__bars {
   display: flex;
+}
+
+/* ---------- One style for the whole page ----------
+   The same rules as the ceremony card, on desktop and on phones:
+   small spaced labels, softly dimmed supporting text, and plenty of even space.
+   Label 11px / 10px on phones. Text 16px / 15px. Section gap 56px / 44px. */
+:root {
+  --section-gap: 56px;
+  --ink-soft: rgba(79, 68, 112, 0.9);
+}
+
+.heading {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  line-height: 1.4;
+  color: var(--violet-dark);
+}
+
+.card-wrap,
+.venue {
+  margin-bottom: var(--section-gap);
+}
+
+.gallery,
+.gift {
+  padding-bottom: var(--section-gap);
+}
+
+.rsvp-cta {
+  margin: calc(24px - var(--section-gap)) 0 var(--section-gap);
+}
+
+/* Countdown and calendar */
+.countdown {
+  margin-top: 24px;
+}
+
+.countdown__num {
+  font-size: 34px;
+  font-weight: 400;
+}
+
+.countdown__unit {
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--warm);
+}
+
+.countdown__done {
+  font-size: 18px;
+  color: var(--dim);
+}
+
+.calendar {
+  margin-top: 40px;
+  padding: 16px 14px 14px;
+  border-radius: 14px;
+}
+
+.calendar__month {
+  font-size: 20px;
+}
+
+.calendar__grid {
+  font-size: 15px;
+}
+
+.calendar__dow {
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.card__link {
+  margin-top: 20px;
+  font-size: 16px;
+  color: var(--dim);
+}
+
+/* Schedule */
+.timeline {
+  column-gap: 14px;
+  row-gap: 16px;
+  margin-top: 24px;
+}
+
+.timeline::before {
+  background: var(--hairline);
+}
+
+.timeline__time {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.timeline__title {
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--dim);
+}
+
+.timeline__medal {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Sections on the paper background */
+.gallery__stage {
+  margin-top: 24px;
+}
+
+.gallery__count {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.venue__address {
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.venue__map {
+  margin-top: 20px;
+}
+
+.venue__directions {
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.gift__note {
+  margin-top: 14px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.gift__save {
+  font-size: 13px;
+}
+
+.closing__text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.closing__verse {
+  margin-top: 24px;
+}
+
+.closing__verse .verse__text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.closing__verse .verse__ref {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --section-gap: 44px;
+  }
+
+  .heading {
+    font-size: 11px;
+  }
+
+  .countdown {
+    margin-top: 20px;
+  }
+
+  .countdown__num {
+    font-size: 30px;
+  }
+
+  .countdown__unit {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .calendar {
+    margin-top: 32px;
+  }
+
+  .calendar__month {
+    font-size: 18px;
+  }
+
+  .calendar__grid {
+    font-size: 14px;
+  }
+
+  .calendar__dow {
+    font-size: 10px;
+  }
+
+  .card__link {
+    font-size: 15px;
+  }
+
+  .timeline {
+    column-gap: 10px;
+    row-gap: 14px;
+    margin-top: 20px;
+  }
+
+  .timeline__time,
+  .timeline__title {
+    font-size: 14.5px;
+  }
+
+  .venue__address,
+  .gift__note,
+  .closing__text,
+  .closing__verse .verse__text {
+    font-size: 15px;
+  }
+
+  .closing__verse .verse__ref {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

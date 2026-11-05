@@ -269,14 +269,6 @@
 
   /* ---------- Photo gallery: a 3D carousel you can swipe ---------- */
   let current = Math.min(2, C.album.length - 1);
-  const lightbox = $("lightbox");
-
-  function showPhoto(i) {
-    current = (i + C.album.length) % C.album.length;
-    $("lb-img").src = C.album[current];
-    $("lb-img").alt = `Photo ${current + 1} of ${C.album.length}`;
-    layoutGallery();
-  }
 
   const slides = C.album.map((src, i) => {
     const button = el("button", "gallery__item");
@@ -287,14 +279,9 @@
     img.loading = "lazy";
     button.append(img);
     button.addEventListener("click", () => {
-      if (swiped) return;
-      if (i === current) {
-        showPhoto(i);
-        lightbox.showModal();
-      } else {
-        current = i;
-        layoutGallery();
-      }
+      if (swiped || i === current) return;
+      current = i;
+      layoutGallery();
     });
     $("gallery-stage").append(button);
     return button;
@@ -312,11 +299,9 @@
       slide.style.opacity = far > 2 ? 0 : 1 - far * 0.22;
       slide.style.zIndex = 10 - far;
       slide.style.visibility = far > 2 ? "hidden" : "visible";
-      slide.tabIndex = far > 1 ? -1 : 0;
-      slide.setAttribute(
-        "aria-label",
-        far === 0 ? `Enlarge photo ${i + 1}` : `Show photo ${i + 1}`
-      );
+      slide.tabIndex = far === 1 ? 0 : -1;
+      slide.classList.toggle("is-current", far === 0);
+      slide.setAttribute("aria-label", far === 0 ? `Photo ${i + 1}` : `Show photo ${i + 1}`);
     });
     $("gallery-count").textContent = `${current + 1} / ${n}`;
   }
@@ -348,17 +333,6 @@
   stage.addEventListener("pointercancel", () => (swipeStart = null));
 
   layoutGallery();
-
-  $("lb-prev").addEventListener("click", () => showPhoto(current - 1));
-  $("lb-next").addEventListener("click", () => showPhoto(current + 1));
-  $("lb-close").addEventListener("click", () => lightbox.close());
-  lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) lightbox.close();
-  });
-  lightbox.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") showPhoto(current - 1);
-    if (e.key === "ArrowRight") showPhoto(current + 1);
-  });
 
   /* ---------- Countdown ---------- */
   (function buildCountdown() {
