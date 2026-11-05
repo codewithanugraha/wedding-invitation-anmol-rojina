@@ -261,7 +261,7 @@ textarea {
   width: max-content;
   max-width: 50%;
   font-family: "Dawning of a New Day", cursive;
-  font-size: calc(var(--env-w) * 0.06 * var(--name-fit, 1));
+  font-size: calc(var(--env-w) * var(--name-size, 0.06) * var(--name-fit, 1));
   line-height: 1.15;
   text-align: left;
   text-wrap: balance;
@@ -270,7 +270,16 @@ textarea {
   transform: translateY(-50%) rotate(-1.5deg);
   /* Ink in the paper: the grain shows through the letters, and the edges stay sharp. */
   mix-blend-mode: multiply;
-  opacity: 0.8;
+  opacity: 0.85;
+  /* The font comes in one thin weight, so a fine outline gives the pen stroke more body. */
+  -webkit-text-stroke: 0.3px currentColor;
+}
+
+@media (max-width: 640px) {
+  .envelope__name {
+    --name-size: 0.07;
+    -webkit-text-stroke-width: 0.35px;
+  }
 }
 .envelope__flap {
   z-index: 4;
