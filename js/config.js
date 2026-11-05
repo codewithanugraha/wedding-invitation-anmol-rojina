@@ -45,6 +45,12 @@ window.WEDDING = {
       venue: "Beth Shalom Putalisadak Church",
       address: "Ramshah Path, Putalisadak, Kathmandu",
       mapQuery: "Beth Shalom Putalisadak Church, Ramshah Path, Putalisadak, Kathmandu",
+      /* Parking is away from the church, so the venue shows a Parking tab. mapQuery is
+         the pin from https://maps.app.goo.gl/8RTbwJy87saGahZ46 Remove this block to hide the tab. */
+      parking: {
+        note: "Please park here, about 150 m from the church, and walk over.",
+        mapQuery: "27.698845,85.321277",
+      },
     },
   ],
 

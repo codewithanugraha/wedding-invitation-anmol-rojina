@@ -585,31 +585,50 @@
 
   $("venue-address").textContent = venueText(C.events[0]);
 
+  // One tab per place to show: the venue, and where to park if that is elsewhere.
   const mapped = C.events.filter((event) => event.mapQuery);
-  function showMap(event, button) {
+  const places = mapped.flatMap((event) => {
+    const venue = {
+      label: mapped.length > 1 ? event.title : "Venue",
+      text: venueText(event),
+      mapTitle: `Map to ${event.venue}`,
+      mapQuery: event.mapQuery,
+    };
+    if (!event.parking) return [venue];
+    return [
+      venue,
+      {
+        label: "Parking",
+        text: event.parking.note,
+        mapTitle: `Map to the parking area for ${event.venue}`,
+        mapQuery: event.parking.mapQuery,
+      },
+    ];
+  });
+  function showMap(place, button) {
     $("map-tabs")
       .querySelectorAll("button")
       .forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-    $("venue-address").textContent = venueText(event);
+    $("venue-address").textContent = place.text;
     const frame = document.createElement("iframe");
-    frame.title = `Map to ${event.venue}`;
+    frame.title = place.mapTitle;
     frame.loading = "lazy";
     frame.referrerPolicy = "strict-origin-when-cross-origin"; // keeps ?name= out of what Google receives
-    frame.src = mapsEmbed(event.mapQuery);
+    frame.src = mapsEmbed(place.mapQuery);
     $("map-frame").replaceChildren(frame);
-    $("map-directions").href = mapsDirections(event.mapQuery);
+    $("map-directions").href = mapsDirections(place.mapQuery);
     $("map-directions").hidden = false;
   }
-  if (mapped.length) {
-    mapped.forEach((event) => {
-      const button = el("button", "tab", event.title);
+  if (places.length) {
+    places.forEach((place) => {
+      const button = el("button", "tab", place.label);
       button.type = "button";
-      button.addEventListener("click", () => showMap(event, button));
+      button.addEventListener("click", () => showMap(place, button));
       $("map-tabs").append(button);
     });
     // Open on the first venue, where the day begins.
     $("map-tabs").querySelector("button").click();
-    if (mapped.length === 1) $("map-tabs").hidden = true;
+    if (places.length === 1) $("map-tabs").hidden = true;
   } else {
     $("map-frame").append(
       el("p", "venue__empty", "The map will appear here once your venue is added to js/config.js.")

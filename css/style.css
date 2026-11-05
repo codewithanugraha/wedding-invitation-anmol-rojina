@@ -168,7 +168,7 @@ textarea {
 }
 
 .cover__inner {
-  --env-w: min(82vw, 400px, 58vh);
+  --env-w: min(82vw, 520px, 62vh);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -200,7 +200,8 @@ textarea {
   flex: none;
   width: var(--env-w);
   height: calc(var(--env-w) * 0.68);
-  margin: clamp(26px, 6vh, 52px) 0 clamp(26px, 5vh, 44px);
+  /* Room for the flowers that hang over the top and bottom edges, which grow with it. */
+  margin: max(clamp(26px, 6vh, 52px), calc(var(--env-w) * 0.135)) 0 max(clamp(26px, 5vh, 44px), calc(var(--env-w) * 0.115));
   perspective: 1100px;
 }
 
