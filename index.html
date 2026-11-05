@@ -169,8 +169,8 @@
             <input class="panel__input" id="wish-name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Enter your name" required />
 
             <label class="panel__label" for="wish-message">Your wish</label>
-            <textarea class="panel__input" id="wish-message" name="message" rows="3" maxlength="500" placeholder="Write your wish" required></textarea>
-            <p class="form__count" id="wish-count" aria-live="off">0 / 500</p>
+            <textarea class="panel__input" id="wish-message" name="message" rows="2" maxlength="60" placeholder="Write your wish" required></textarea>
+            <p class="form__count" id="wish-count" aria-live="off">0 / 60</p>
 
             <!-- Hidden from people. Bots that fill it in are ignored. -->
             <div class="form__trap" aria-hidden="true">
@@ -195,6 +195,7 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.500 10.500 12 15l4.500-4.500M5 19.500h14" /></svg>
           Download QR Code
         </a>
+        <p class="gift__hint" id="gift-hint" role="status" hidden></p>
       </section>
 
       <footer class="closing">

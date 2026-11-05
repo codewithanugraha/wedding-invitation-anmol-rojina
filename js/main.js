@@ -33,6 +33,23 @@
     if ((e.ctrlKey || e.metaKey) && ["+", "=", "-", "_", "0"].includes(e.key)) e.preventDefault();
   });
 
+  /* No right-click menu or developer tool shortcuts. This only deters casual visitors:
+     browsers still offer these tools from their own menus, so nothing private may ever be
+     placed in this page. Text fields keep their menu for pasting, and the QR code keeps
+     it so that a long press can save the image. */
+  document.addEventListener("contextmenu", (e) => {
+    if (!e.target.closest?.("input, textarea, .gift__qr")) e.preventDefault();
+  });
+  window.addEventListener("keydown", (e) => {
+    const command = e.ctrlKey || e.metaKey;
+    const devTools =
+      e.key === "F12" ||
+      (command && (e.shiftKey || e.altKey) && ["KeyI", "KeyJ", "KeyC"].includes(e.code)) ||
+      (command && !e.shiftKey && e.code === "KeyU") ||
+      (e.metaKey && e.altKey && e.code === "KeyU");
+    if (devTools) e.preventDefault();
+  });
+
   function el(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -678,6 +695,53 @@
   });
 
   /* ---------- Gift ---------- */
+  /* Guests reading on a phone cannot scan their own screen, so they can save the code.
+     No website can write to the photo library directly, so each device gets its best route:
+     - iPhone and iPad: the share sheet, where "Save Image" puts it in Photos.
+     - Android: a normal download, which appears in the Gallery.
+     - Computers: a normal download.
+     - Apps with their own browser (Messenger, Instagram...): downloads often do nothing
+       there, so guests are told to press and hold the code instead. */
+  function setUpQrSave(src) {
+    const link = $("gift-save");
+    const hint = $("gift-hint");
+    const fileName = "anmol-rojina-qr-code.jpeg";
+    const userAgent = navigator.userAgent;
+    const isApple =
+      /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const inAppBrowser = /FBAN|FBAV|FB_IAB|Instagram|Line\/|MicroMessenger|Viber|; wv\)/i.test(userAgent);
+    const showHint = () => {
+      hint.textContent = "Press and hold the QR code, then choose to save the image.";
+      hint.hidden = false;
+    };
+    let file = null;
+
+    link.href = src;
+    link.download = fileName;
+    link.hidden = false;
+
+    // Fetched ahead of time: Safari only allows sharing straight after the tap.
+    if (isApple && !inAppBrowser && navigator.canShare) {
+      fetch(src)
+        .then((res) => (res.ok ? res.blob() : null))
+        .then((blob) => {
+          if (blob) file = new File([blob], fileName, { type: blob.type || "image/jpeg" });
+        })
+        .catch(() => {});
+    }
+
+    link.addEventListener("click", async (event) => {
+      if (!isApple && !inAppBrowser) return; // the browser downloads it
+      event.preventDefault();
+      if (!file || !navigator.canShare({ files: [file] })) return showHint();
+      try {
+        await navigator.share({ files: [file] });
+      } catch (err) {
+        if (err.name !== "AbortError") showHint(); // AbortError: the guest closed the sheet
+      }
+    });
+  }
+
   if (!C.gift) {
     $("gift-section").hidden = true;
   } else {
@@ -687,9 +751,7 @@
       qr.src = C.gift.qrImage;
       qr.alt = "QR code to support the ceremony";
       $("gift-qr").append(qr);
-      // Guests reading on a phone cannot scan their own screen, so they can save it.
-      $("gift-save").href = C.gift.qrImage;
-      $("gift-save").hidden = false;
+      setUpQrSave(C.gift.qrImage);
     } else {
       $("gift-qr").append(el("p", "gift__empty", "Your QR code will appear here"));
     }

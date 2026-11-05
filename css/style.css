@@ -1506,8 +1506,12 @@ textarea {
   background: #fbfcf8;
 }
 
+/* Two lines at most. New wishes fit within the limit; older, longer ones are cut off. */
 .wish__message {
-  white-space: pre-line;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   font-size: 15px;
   line-height: 1.5;
 }
@@ -1587,6 +1591,15 @@ textarea {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.gift__hint {
+  max-width: 260px;
+  margin: 4px auto 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--olive);
 }
 
 /* ---------- Pop-ups ---------- */
@@ -1686,8 +1699,8 @@ textarea {
 }
 
 textarea.panel__input {
-  min-height: 96px;
-  resize: vertical;
+  min-height: 76px;
+  resize: none;
 }
 
 .panel__input:focus {

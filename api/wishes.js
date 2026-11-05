@@ -2,6 +2,7 @@
 const { supabase, isSameSite, cleanText, readBody, deny } = require("./_supabase");
 
 const FIELDS = "id,name,message,created_at";
+const MAX_WISH = 60; // about two lines on a phone; js/wishes.js has the same limit
 
 module.exports = async function handler(req, res) {
   try {
@@ -20,7 +21,10 @@ module.exports = async function handler(req, res) {
 
     const body = readBody(req);
     const name = cleanText(body.name, 60);
-    const message = cleanText(body.message, 500);
+    const message = cleanText(
+      typeof body.message === "string" ? body.message.replace(/\s+/g, " ") : null,
+      MAX_WISH
+    );
     if (!name || !message) return deny(res, 400, "A name and a wish are required");
 
     const db = await supabase(`wishes?columns=name,message&select=${FIELDS}`, {

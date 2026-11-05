@@ -3,7 +3,7 @@
    it falls back to this browser's storage, so the page can still be tried out. */
 window.Wishes = (function () {
   const MAX_NAME = 60;
-  const MAX_MESSAGE = 500;
+  const MAX_MESSAGE = 60; // about two lines on a phone; api/wishes.js has the same limit
   const REFRESH_MS = 60000;
   const LOCAL_KEY = "wedding-wishes-demo";
 
@@ -107,7 +107,7 @@ window.Wishes = (function () {
     /* Guests' words are only ever set with textContent, so nothing they
        type can run as code on the page. */
     function render() {
-      if (!wishes.length) return placeholder("Be the first to leave a wish 💜");
+      if (!wishes.length) return placeholder("Be the first to leave a wish 💚");
 
       listEl.replaceChildren(
         ...wishes.map((wish) => {
@@ -153,7 +153,14 @@ window.Wishes = (function () {
       form.toggleAttribute("data-sending", sending); // tells auto-scroll to wait
     }
 
+    // A wish is one short passage, so line breaks become spaces, including pasted ones.
+    messageEl.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") event.preventDefault();
+    });
     messageEl.addEventListener("input", () => {
+      if (/[\r\n]/.test(messageEl.value)) {
+        messageEl.value = messageEl.value.replace(/\s*[\r\n]+\s*/g, " ").slice(0, MAX_MESSAGE);
+      }
       count.textContent = `${messageEl.value.length} / ${MAX_MESSAGE}`;
     });
 
