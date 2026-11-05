@@ -1,15 +1,17 @@
 :root {
-  --paper: #fdfcfe;
-  --tint: #f1edf8;
-  --violet: #7869a0;
-  --violet-dark: #5f4e8a;
-  --gold: #b9975b;
-  --gold-soft: #eddcb0;
-  --gold-ink: #e6cf9f; /* gold writing on purple: the envelope name and card labels */
-  --olive: #6c6e60;
-  --ink: #4f4470;
-  --line: rgba(120, 105, 160, 0.3);
-  --on-violet-soft: rgba(255, 255, 255, 0.86);
+  --paper: #fdfdfa;
+  --tint: #eff1e8;
+  --sage: #6b7362; /* soft, but still deep enough for white text */
+  --sage-dark: #4f5743;
+  --envelope: #acb397;
+  --envelope-dark: #848a74;
+  --petal: #d1d5c2;
+      --gold-ink: #f8f2df; /* soft cream writing on the sage cards */
+  --envelope-ink: #55402a; /* warm brown pen ink on the light envelope, near the wax */
+  --olive: #5f6552;
+  --ink: #3f4636;
+  --line: rgba(132, 138, 116, 0.35);
+  --on-sage-soft: rgba(255, 255, 255, 0.86);
 
   --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --display: "Viaoda Libre", "Cormorant Garamond", Georgia, serif;
@@ -17,8 +19,8 @@
   --sans: "Jost", "Helvetica Neue", Arial, sans-serif;
 
   /* Soft, layered shadows: a tight one for contact and wider, fainter ones for depth. */
-  --shadow-md: 0 1px 3px rgba(46, 36, 80, 0.05), 0 8px 20px rgba(46, 36, 80, 0.07), 0 20px 44px rgba(46, 36, 80, 0.09);
-  --shadow-lg: 0 2px 6px rgba(46, 36, 80, 0.06), 0 14px 32px rgba(46, 36, 80, 0.1), 0 36px 72px rgba(46, 36, 80, 0.14);
+  --shadow-md: 0 1px 3px rgba(45, 50, 36, 0.05), 0 8px 20px rgba(45, 50, 36, 0.07), 0 20px 44px rgba(45, 50, 36, 0.09);
+  --shadow-lg: 0 2px 6px rgba(45, 50, 36, 0.06), 0 14px 32px rgba(45, 50, 36, 0.1), 0 36px 72px rgba(45, 50, 36, 0.14);
 }
 
 * {
@@ -69,7 +71,7 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2px solid var(--violet-dark);
+  outline: 2px solid var(--sage-dark);
   outline-offset: 3px;
 }
 
@@ -103,7 +105,7 @@ textarea {
   letter-spacing: 0.04em;
   text-align: center;
   text-transform: uppercase;
-  color: var(--violet);
+  color: var(--sage);
 }
 
 .btn {
@@ -112,7 +114,7 @@ textarea {
   padding: 10px 28px;
   border: 0;
   border-radius: 999px;
-  background: var(--violet);
+  background: var(--sage);
   color: #fff;
   font-family: var(--sans);
   font-size: 13px;
@@ -124,7 +126,7 @@ textarea {
 }
 
 .btn:hover {
-  background: var(--violet-dark);
+  background: var(--sage-dark);
   transform: scale(1.03);
 }
 
@@ -143,7 +145,7 @@ textarea {
   padding: 10px 6px;
   border: 0;
   background: none;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
   font-family: var(--sans);
   font-size: 13px;
   text-decoration: underline;
@@ -186,7 +188,7 @@ textarea {
   font-weight: 400;
   line-height: 1.1;
   text-transform: uppercase;
-  color: var(--violet);
+  color: var(--sage);
 }
 
 .cover__date {
@@ -223,7 +225,7 @@ textarea {
 .envelope__back {
   z-index: 1;
   border-radius: 6px;
-  background-image: url("../assets/art/envelope-paper-grain.webp"), linear-gradient(160deg, #645383, #51416e);
+  background-image: url("../assets/art/envelope-paper-grain.webp"), linear-gradient(160deg, #949a83, #888e77);
   background-position: 90px 40px, 0 0;
   box-shadow: var(--shadow-lg);
 }
@@ -245,12 +247,16 @@ textarea {
 .envelope__pocket {
   z-index: 3;
   border-radius: 6px;
-  background-image: url("../assets/art/envelope-paper-grain.webp"), linear-gradient(170deg, #8573a5, #756396);
+  background-image: url("../assets/art/envelope-paper-grain.webp"), linear-gradient(170deg, #bdc4a6, #b5bc9e);
   background-position: 0 0, 0 0;
   clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
 }
 
-/* "Dear" and the guest's name, handwritten in gold ink to match the wax seal.
+.ink-filter {
+  position: absolute;
+}
+
+/* "Dear" and the guest's name, handwritten in warm brown ink to go with the wax seal.
    It sits in the lower left, the open corner opposite the bouquet. */
 .envelope__name {
   position: absolute;
@@ -264,15 +270,19 @@ textarea {
   text-align: left;
   text-wrap: balance;
   white-space: pre;
-  color: var(--gold-ink);
+  color: var(--envelope-ink);
   transform: translateY(-50%) rotate(-1.5deg);
+  /* Soaked into the paper: rough, patchy edges, with the grain showing through. */
+  filter: url("#ink-soak");
+  mix-blend-mode: multiply;
+  opacity: 0.8;
 }
 .envelope__flap {
   z-index: 4;
   bottom: auto;
   height: 60%;
   transform-origin: top center;
-  filter: drop-shadow(0 2px 4px rgba(46, 36, 80, 0.12)) drop-shadow(0 6px 14px rgba(46, 36, 80, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(45, 50, 36, 0.12)) drop-shadow(0 6px 14px rgba(45, 50, 36, 0.1));
   transition: transform 0.85s ease-in-out 0.3s, z-index 0s linear 0.72s;
 }
 
@@ -283,7 +293,7 @@ textarea {
   display: block;
   width: 100%;
   height: 100%;
-  background-image: url("../assets/art/envelope-paper-grain.webp"), linear-gradient(180deg, #9785b7, #8371a4);
+  background-image: url("../assets/art/envelope-paper-grain.webp"), linear-gradient(180deg, #c3caad, #b9c0a3);
   background-position: 130px 70px, 0 0;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
@@ -319,7 +329,7 @@ textarea {
   border: 0;
   border-radius: 50%;
   background: url("../assets/art/wax-seal.webp") center / contain no-repeat;
-  filter: drop-shadow(0 1px 2px rgba(46, 36, 80, 0.22)) drop-shadow(0 5px 12px rgba(46, 36, 80, 0.2));
+  filter: saturate(0.85) drop-shadow(0 1px 2px rgba(45, 50, 36, 0.22)) drop-shadow(0 5px 12px rgba(45, 50, 36, 0.2));
   transform: translate(-50%, -50%);
   cursor: pointer;
   transition: transform 0.35s ease, opacity 0.35s ease;
@@ -460,9 +470,9 @@ textarea {
   max-width: 720px;
   margin-inline: auto;
   overflow: hidden;
-  background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)),
+  background: linear-gradient(rgba(250, 251, 243, 0.55), rgba(250, 251, 243, 0.55)),
     #f6f6f7 url("../assets/art/paper-background.webp") center top / 100% auto;
-  box-shadow: 0 0 60px rgba(46, 36, 80, 0.08);
+  box-shadow: 0 0 60px rgba(45, 50, 36, 0.08);
 }
 
 .reveal {
@@ -503,16 +513,16 @@ textarea {
 }
 
 .deco--hero-a {
-  top: -10.2cqw;
-  left: -8.5cqw;
-  width: 65cqw;
+  top: -8.5cqw;
+  left: -7cqw;
+  width: 54cqw;
   max-width: none;
 }
 
 .deco--hero-b {
-  top: 20.2cqw;
-  left: 58.4cqw;
-  width: 53cqw;
+  top: 24cqw;
+  left: 64cqw;
+  width: 45cqw;
   max-width: none;
   transform: rotate(204deg) scaleX(-1);
   animation-delay: 1.2s;
@@ -526,7 +536,6 @@ textarea {
   width: 46cqw;
   max-width: none;
   opacity: 0.09;
-  filter: grayscale(1);
   mix-blend-mode: multiply;
   pointer-events: none;
 }
@@ -568,7 +577,7 @@ textarea {
   left: 28cqw;
   width: 44cqw;
   aspect-ratio: 1041 / 1203;
-  filter: drop-shadow(0 0.4cqw 0.8cqw rgba(46, 36, 80, 0.08)) drop-shadow(0 1.8cqw 3.6cqw rgba(46, 36, 80, 0.14));
+  filter: drop-shadow(0 0.4cqw 0.8cqw rgba(45, 50, 36, 0.08)) drop-shadow(0 1.8cqw 3.6cqw rgba(45, 50, 36, 0.14));
 }
 
 .tucked__back,
@@ -588,7 +597,7 @@ textarea {
   aspect-ratio: 4 / 5;
   border: 0.55cqw solid #fff;
   background: #fff;
-  box-shadow: 0 0.2cqw 0.6cqw rgba(46, 36, 80, 0.12), 0 1.2cqw 3cqw rgba(46, 36, 80, 0.16);
+  box-shadow: 0 0.2cqw 0.6cqw rgba(45, 50, 36, 0.12), 0 1.2cqw 3cqw rgba(45, 50, 36, 0.16);
   transform: translate(-50%, -50%);
   rotate: -12deg;
   animation: drift 6.5s ease-in-out infinite;
@@ -619,7 +628,7 @@ textarea {
   font-weight: 400;
   line-height: 1.31;
   text-transform: uppercase;
-  color: var(--violet);
+  color: var(--sage);
 }
 
 .hero__names > span {
@@ -647,7 +656,7 @@ textarea {
   }
 }
 
-/* ---------- Violet cards ---------- */
+/* ---------- Sage cards ---------- */
 .card-wrap {
   position: relative;
   z-index: 1;
@@ -683,7 +692,7 @@ textarea {
   z-index: 1;
   padding: 34px 20px 36px;
   border-radius: 12px;
-  background: var(--violet) url("../assets/art/paper-texture.webp");
+  background: var(--sage) url("../assets/art/paper-texture.webp");
   background-blend-mode: multiply;
   box-shadow: var(--shadow-md);
   color: #fff;
@@ -699,7 +708,7 @@ textarea {
   border-radius: 24px;
   background: #fff;
   font-family: var(--sans);
-  color: #3a3547;
+  color: var(--ink);
   text-align: left;
 }
 
@@ -708,7 +717,7 @@ textarea {
   white-space: pre-line;
   font-size: 18px;
   line-height: 1.4;
-  color: var(--on-violet-soft);
+  color: var(--on-sage-soft);
   text-wrap: balance;
 }
 
@@ -721,7 +730,7 @@ textarea {
   text-underline-offset: 4px;
 }
 
-/* Type levels in the violet cards:
+/* Type levels in the sage cards:
    1. display font, large: the couple's names and the date
    2. serif, medium: times, venues and sentences
    3. sans, small and spaced: labels such as "Holy Matrimony" */
@@ -777,7 +786,7 @@ textarea {
   margin-block: 2px;
   font-size: 18px;
   line-height: 1.2;
-  color: var(--on-violet-soft);
+  color: var(--on-sage-soft);
 }
 
 .verse {
@@ -842,7 +851,7 @@ textarea {
   margin-top: 2px;
   font-size: 16px;
   line-height: 1.35;
-  color: var(--on-violet-soft);
+  color: var(--on-sage-soft);
 }
 
 /* Ceremony card: four quiet groups with generous space between them.
@@ -850,7 +859,7 @@ textarea {
    Brightest and largest are the names and date. Labels are small and warm;
    supporting lines are slightly dimmed. */
 .card:not(.card--white) {
-  --dim: rgba(255, 255, 255, 0.88);
+  --dim: rgba(255, 255, 255, 0.94);
   --warm: var(--gold-ink);
   --hairline: rgba(255, 255, 255, 0.24);
   padding: 44px 32px 46px;
@@ -1100,7 +1109,7 @@ textarea {
 }
 
 /* ---------- Calendar ----------
-   Sits directly on the violet card: no box and no lines, only the wedding day stands out. */
+   Sits directly on the sage card: no box and no lines, only the wedding day stands out. */
 .calendar {
   max-width: 300px;
   margin: 40px auto 0;
@@ -1147,7 +1156,7 @@ textarea {
 .calendar__day.is-wedding {
   font-size: 14px;
   font-weight: 700;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
 }
 
 .calendar__day svg {
@@ -1222,8 +1231,8 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 50%;
   background: #fff;
-  color: var(--violet-dark);
-  box-shadow: 0 1px 2px rgba(46, 36, 80, 0.05), 0 6px 16px rgba(46, 36, 80, 0.08);
+  color: var(--sage-dark);
+  box-shadow: 0 1px 2px rgba(45, 50, 36, 0.05), 0 6px 16px rgba(45, 50, 36, 0.08);
   cursor: pointer;
   transition: background-color 0.25s ease, border-color 0.25s ease;
 }
@@ -1238,12 +1247,12 @@ textarea {
 }
 .gallery__nav:focus-visible,
 .gallery__dot:focus-visible {
-  outline: 2px solid var(--violet);
+  outline: 2px solid var(--sage);
   outline-offset: 2px;
 }
 @media (hover: hover) {
   .gallery__nav:hover {
-    border-color: var(--violet);
+    border-color: var(--sage);
     background: var(--tint);
   }
 }
@@ -1273,7 +1282,7 @@ textarea {
   height: 2px;
   margin: auto;
   border-radius: 1px;
-  background: var(--violet);
+  background: var(--sage);
   opacity: 0.25;
   transition: opacity 0.35s ease;
 }
@@ -1316,10 +1325,10 @@ textarea {
 .tab {
   min-height: 40px;
   padding: 6px 16px;
-  border: 1px solid var(--violet);
+  border: 1px solid #c3c9b2;
   border-radius: 999px;
   background: #fff;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
   font-family: var(--sans);
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -1328,18 +1337,20 @@ textarea {
 }
 
 .tab[aria-pressed="true"] {
-  background: var(--violet);
+  background: var(--sage);
   color: #fff;
 }
 
 .venue__map {
   margin-top: 14px;
   overflow: hidden;
-  border: 1px solid var(--violet);
+  border: 1px solid var(--petal);
   border-radius: 15px;
 }
 
+/* Quiets Google's bright map colours so they sit with the sage. */
 .venue__map iframe {
+  filter: saturate(0.6);
   display: block;
   width: 100%;
   height: 280px;
@@ -1359,7 +1370,7 @@ textarea {
   margin-top: 12px;
   padding: 6px 10px;
   font-weight: 600;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
   text-underline-offset: 4px;
 }
 
@@ -1421,7 +1432,7 @@ textarea {
   height: 38px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 50%;
-  background: #6c5d94;
+  background: #5f6751;
 }
 
 .timeline__medal svg {
@@ -1438,7 +1449,7 @@ textarea {
 .notice {
   margin-top: 16px;
   padding: 10px 14px;
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid var(--envelope);
   background: var(--tint);
   font-family: var(--sans);
   font-size: 13px;
@@ -1449,7 +1460,7 @@ textarea {
   margin-top: 6px;
   text-align: right;
   font-size: 13px;
-  color: #65616f;
+  color: var(--olive);
 }
 
 .form__trap {
@@ -1469,20 +1480,20 @@ textarea {
 
 .wishes__empty {
   padding: 18px 16px;
-  border: 1.5px solid #eceaf2;
+  border: 1.5px solid #e8ebdf;
   border-radius: 16px;
-  background: #fbfbfd;
+  background: #fbfcf8;
   text-align: center;
   font-size: 15px;
   line-height: 1.45;
-  color: #65616f;
+  color: var(--olive);
 }
 
 .wish {
   padding: 14px 16px;
-  border: 1.5px solid #eceaf2;
+  border: 1.5px solid #e8ebdf;
   border-radius: 16px;
-  background: #fbfbfd;
+  background: #fbfcf8;
 }
 
 .wish__message {
@@ -1498,12 +1509,12 @@ textarea {
   gap: 2px 12px;
   margin-top: 8px;
   font-size: 13px;
-  color: #65616f;
+  color: var(--olive);
 }
 
 .wish__meta strong {
   font-weight: 500;
-  color: #3a3547;
+  color: var(--ink);
 }
 
 /* ---------- Gift ---------- */
@@ -1519,7 +1530,7 @@ textarea {
   margin: 12px auto 0;
   font-size: 18px;
   line-height: 1.45;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
   text-wrap: balance;
 }
 
@@ -1542,7 +1553,7 @@ textarea {
   font-family: var(--sans);
   font-size: 13px;
   line-height: 1.4;
-  color: #65616f;
+  color: var(--olive);
 }
 
 .gift__save {
@@ -1553,7 +1564,7 @@ textarea {
   padding: 8px;
   font-family: var(--sans);
   font-size: 14px;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
   text-underline-offset: 3px;
 }
 
@@ -1582,7 +1593,7 @@ textarea {
 }
 
 .popup::backdrop {
-  background: rgba(25, 16, 44, 0.6);
+  background: rgba(63, 70, 54, 0.45);
 }
 
 /* ---------- RSVP pop-up (the .panel__ pieces are shared with the guest book) ---------- */
@@ -1606,8 +1617,8 @@ textarea {
   height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #f1f0f5;
-  color: #5d5a6b;
+  background: #eff1e8;
+  color: var(--olive);
   cursor: pointer;
 }
 
@@ -1628,14 +1639,14 @@ textarea {
   font-size: 30px;
   font-weight: 700;
   line-height: 1.15;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
 }
 
 .panel__intro {
   margin-top: 8px;
   font-size: 16px;
   line-height: 1.45;
-  color: #65616f;
+  color: var(--olive);
 }
 
 .panel__label {
@@ -1644,7 +1655,7 @@ textarea {
   padding: 0;
   font-size: 16px;
   font-weight: 500;
-  color: #3a3547;
+  color: var(--ink);
 }
 
 /* 16px or more stops iPhones zooming in on the field */
@@ -1652,16 +1663,16 @@ textarea {
   display: block;
   width: 100%;
   padding: 13px 16px;
-  border: 1.5px solid #e3e1ea;
+  border: 1.5px solid #d1d5c2;
   border-radius: 14px;
   background: #fff;
   font-family: var(--sans);
   font-size: 16px;
-  color: #3a3547;
+  color: var(--ink);
 }
 
 .panel__input::placeholder {
-  color: #75717f;
+  color: #6b7160;
 }
 
 textarea.panel__input {
@@ -1670,8 +1681,8 @@ textarea.panel__input {
 }
 
 .panel__input:focus {
-  border-color: var(--violet);
-  outline: 2px solid var(--violet);
+  border-color: var(--sage);
+  outline: 2px solid var(--sage);
   outline-offset: 0;
 }
 
@@ -1693,12 +1704,12 @@ textarea.panel__input {
   align-items: center;
   gap: 14px;
   padding: 10px 14px;
-  border: 1.5px solid #eceaf2;
+  border: 1.5px solid #e8ebdf;
   border-radius: 16px;
-  background: #fbfbfd;
+  background: #fbfcf8;
   font-size: 16px;
   font-weight: 500;
-  color: #3a3547;
+  color: var(--ink);
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s;
 }
@@ -1720,27 +1731,27 @@ textarea.panel__input {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #e7e5ee;
-  color: #5d5a6b;
+  background: #e8ebdf;
+  color: var(--olive);
   transition: background-color 0.15s, color 0.15s;
 }
 
 .rsvp__choice:hover {
-  border-color: #cfc9e0;
+  border-color: #d1d5c2;
 }
 
 .rsvp__choice:has(input:checked) {
-  border-color: var(--violet);
+  border-color: var(--sage);
   background: var(--tint);
 }
 
 .rsvp__choice:has(input:checked) .rsvp__icon {
-  background: var(--violet);
+  background: var(--sage);
   color: #fff;
 }
 
 .rsvp__choice:has(input:focus-visible) {
-  outline: 2px solid var(--violet-dark);
+  outline: 2px solid var(--sage-dark);
   outline-offset: 2px;
 }
 
@@ -1749,7 +1760,7 @@ textarea.panel__input {
   text-align: center;
   font-size: 15px;
   line-height: 1.4;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
 }
 
 .panel__status:empty {
@@ -1757,7 +1768,7 @@ textarea.panel__input {
 }
 
 .panel__status.is-error {
-  color: #a4284a;
+  color: #9a4a3c;
 }
 
 .panel__submit {
@@ -1771,7 +1782,8 @@ textarea.panel__input {
 }
 
 .panel__submit:disabled {
-  background: #c9c5da;
+  background: #e8ebdf;
+  color: #6e7565;
   opacity: 1;
   transform: none;
   cursor: not-allowed;
@@ -1787,7 +1799,7 @@ textarea.panel__input {
   width: 56px;
   height: 56px;
   margin: 0 auto 16px;
-  background: var(--violet);
+  background: var(--sage);
   color: #fff;
 }
 
@@ -1814,7 +1826,7 @@ textarea.panel__input {
   z-index: 1;
   padding-inline: 24px;
   font-size: 18px;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
 }
 
 /* the space below leaves room for the flowers along the page bottom */
@@ -1823,7 +1835,7 @@ textarea.panel__input {
   z-index: 1;
   margin: 18px auto 25cqw;
   padding-inline: 24px;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
 }
 
 /* Turned upside down and cropped by the page edges, sized in cqw (1% of the
@@ -1851,7 +1863,7 @@ textarea.panel__input {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: linear-gradient(145deg, #8a7bb4, #6a5a96);
+  background: linear-gradient(145deg, #848a74, #6b7362);
   box-shadow: var(--shadow-md);
   color: #fff;
   cursor: pointer;
@@ -1945,7 +1957,7 @@ textarea.panel__input {
    Label 11px / 10px on phones. Text 16px / 15px. Section gap 56px / 44px. */
 :root {
   --section-gap: 56px;
-  --ink-soft: rgba(79, 68, 112, 0.9);
+  --ink-soft: rgba(63, 70, 54, 0.9);
 }
 
 .heading {
@@ -1954,7 +1966,7 @@ textarea.panel__input {
   font-weight: 500;
   letter-spacing: 0.26em;
   line-height: 1.4;
-  color: var(--violet-dark);
+  color: var(--sage-dark);
 }
 
 .card-wrap,
@@ -2040,6 +2052,13 @@ textarea.panel__input {
 
 .venue__map {
   margin-top: 20px;
+}
+
+/* The walking route is taller than a single pin. Google's From/To card sits on top of the
+   map and would cover the church, so the frame starts above the box to leave it out. */
+.venue__map--route iframe {
+  height: 524px;
+  margin-top: -104px;
 }
 
 .venue__directions {

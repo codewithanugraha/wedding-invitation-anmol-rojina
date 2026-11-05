@@ -338,7 +338,7 @@
 
   $("open-btn").addEventListener("click", openInvitation);
 
-  /* ---------- Big date block, used in both violet cards ---------- */
+  /* ---------- Big date block, used in both sage cards ---------- */
   function dateBlock() {
     const wrap = el("div", "datebox");
     wrap.append(
@@ -581,6 +581,8 @@
   const mapsDirections = (q) =>
     `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(q)}`;
   const mapsEmbed = (q) => `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
+  const mapsWalkEmbed = (from, to) =>
+    `https://www.google.com/maps?saddr=${encodeURIComponent(from)}&daddr=${encodeURIComponent(to)}&dirflg=w&z=18&output=embed`;
   const venueText = (event) => `${event.venue}, ${event.address}`;
 
   $("venue-address").textContent = venueText(C.events[0]);
@@ -596,13 +598,15 @@
     };
     if (!event.parking) return [venue];
     return [
-      venue,
       {
         label: "Parking",
         text: event.parking.note,
         mapTitle: `Map to the parking area for ${event.venue}`,
         mapQuery: event.parking.mapQuery,
+        mapLink: event.parking.mapLink,
+        embed: mapsWalkEmbed(event.parking.walkFrom, event.parking.mapQuery),
       },
+      venue,
     ];
   });
   function showMap(place, button) {
@@ -614,9 +618,10 @@
     frame.title = place.mapTitle;
     frame.loading = "lazy";
     frame.referrerPolicy = "strict-origin-when-cross-origin"; // keeps ?name= out of what Google receives
-    frame.src = mapsEmbed(place.mapQuery);
+    frame.src = place.embed || mapsEmbed(place.mapQuery);
     $("map-frame").replaceChildren(frame);
-    $("map-directions").href = mapsDirections(place.mapQuery);
+    $("map-frame").classList.toggle("venue__map--route", Boolean(place.embed));
+    $("map-directions").href = place.mapLink || mapsDirections(place.mapQuery);
     $("map-directions").hidden = false;
   }
   if (places.length) {
@@ -626,7 +631,7 @@
       button.addEventListener("click", () => showMap(place, button));
       $("map-tabs").append(button);
     });
-    // Open on the first venue, where the day begins.
+    // Open on the first tab.
     $("map-tabs").querySelector("button").click();
     if (places.length === 1) $("map-tabs").hidden = true;
   } else {
