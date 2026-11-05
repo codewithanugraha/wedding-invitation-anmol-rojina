@@ -15,19 +15,17 @@ To preview it, double-click `index.html`.
 **Link preview:** the text shown when the link is shared on WhatsApp or Facebook is near the top of `index.html`. Change it by hand. To add a preview picture once the site is live, put this line beside the others, using your own site's full address:
 
 ```html
-<meta property="og:image" content="https://your-site.netlify.app/assets/photos/our-photo.jpg" />
+<meta property="og:image" content="https://your-site.vercel.app/assets/photos/our-photo.jpg" />
 ```
 
 ## 2. Connect the guest book and RSVP (free)
 
-Until you do this, wishes are saved only in the browser they were written in, the page shows a "Demo mode" note, and the RSVP button stays hidden.
-
 1. Create a free project at [supabase.com](https://supabase.com).
 2. Open **SQL Editor**, paste in everything from `supabase-setup.sql`, and press **Run**.
 3. Open the project's API settings and copy the **Project URL** and the **publishable** key (older projects call it the **anon** key).
-4. Copy `.env.example` to `.env`, paste both values in, and run `node scripts/make-env.js`. To publish, add them as the GitHub secrets described under "Publish".
+4. Add both to Vercel under **Project**, **Settings**, **Environment Variables**, named `SUPABASE_URL` and `SUPABASE_KEY`, then redeploy.
 
-The publishable key is designed to be public, and the database rules limit guests to reading visible wishes and adding new ones. **Never use the `secret` or `service_role` key here.**
+The forms talk to the server functions in `api/`, so the key never reaches a guest's browser. **Never use the `secret` or `service_role` key.**
 
 **Seeing who is coming:** open **Table Editor** and choose `rsvps`. Only you can read this table; guests can send a response but can't see anyone's.
 
@@ -39,29 +37,18 @@ The publishable key is designed to be public, and the database rules limit guest
 
 ## 3. Publish
 
-**Netlify, the easiest option**
+1. Sign in at [vercel.com](https://vercel.com) and import this repository. No build settings are needed.
+2. Add the two environment variables from step 2.
+3. Each push to `main` then publishes the site.
 
-1. Sign in at [netlify.com](https://www.netlify.com).
-2. Go to **Add new project**, then **Deploy manually**.
-3. Drag this whole folder onto the page.
-
-To update the site later, drag the folder in again.
-
-**GitHub Pages**
-
-1. Create a repository on GitHub and upload these files.
-2. Go to **Settings**, then **Secrets and variables**, then **Actions**, and add two repository secrets: `SUPABASE_URL` and `SUPABASE_KEY`.
-3. Go to **Settings**, then **Pages**, and set **Source** to **GitHub Actions**.
-4. Push to `main`. The site then publishes itself each time.
-
-The publishable key still reaches every guest's browser, because the forms need it. `.env` keeps it out of the repository, but the database rules are what protect your data. Everything else you upload to a public repository can be read by anyone.
+To test the forms on your computer, put the same values in `.env` and run `npx vercel dev`. A plain file server has no `api/` functions, so the forms show an error there.
 
 ## 4. Send personal links
 
 Add a guest's name to the end of your link. The envelope then says "Dear Pawan Gurung", and the name is already filled in on the guest book and RSVP forms. Write `%20` for each space, because WhatsApp and other apps cut a link off at a real space:
 
 ```
-https://your-site.netlify.app/?name=Pawan%20Gurung
+https://your-site.vercel.app/?name=Pawan%20Gurung
 ```
 
 ## Good to know

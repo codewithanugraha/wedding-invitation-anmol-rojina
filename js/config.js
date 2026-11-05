@@ -98,9 +98,7 @@ window.WEDDING = {
   closingVerseText: "This is the day which the LORD hath made; we will rejoice and be glad in it.",
   closingVerseReference: "Psalm 118:24",
 
-  /* Guest book and RSVP database (see README.md).
-     These come from js/env.js, which is generated from your .env file.
-     Without it, wishes stay in your own browser and the RSVP button is hidden. */
-  supabaseUrl: (window.ENV || {}).SUPABASE_URL || "",
-  supabaseKey: (window.ENV || {}).SUPABASE_KEY || "",
+  /* Where the guest book and RSVP send their data: the server functions in api/.
+     The database key stays on the server (see README.md). */
+  databaseApi: "/api",
 };

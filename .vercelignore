@@ -1,0 +1,6 @@
+# Not needed by guests, so never published
+README.md
+supabase-setup.sql
+.env*
+.claude
+**/.DS_Store

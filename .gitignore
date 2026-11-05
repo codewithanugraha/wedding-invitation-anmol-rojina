@@ -1,11 +1,10 @@
 .DS_Store
 .claude/
 
-# Environment values and the file generated from them
+# Environment values
 .env
 .env.*
 !.env.example
-js/env.js
 
-# Deployment build folder
-_site/
+# Vercel's local project link
+.vercel/

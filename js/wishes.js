@@ -1,7 +1,6 @@
-/* Guest book.
-   Talks to Supabase directly over its REST API, so no server is needed.
-   Without Supabase details in config.js it falls back to this browser's
-   storage, so the page can still be tried out. */
+/* Guest book. Reads and saves wishes through the site's server function, so
+   the database key never reaches the browser. If config.js has no databaseApi
+   it falls back to this browser's storage, so the page can still be tried out. */
 window.Wishes = (function () {
   const MAX_NAME = 60;
   const MAX_MESSAGE = 500;
@@ -10,15 +9,12 @@ window.Wishes = (function () {
 
   /* ---------- Storage back ends ---------- */
 
-  function supabaseStore(url, key) {
-    const endpoint = url.replace(/\/+$/, "") + "/rest/v1/wishes";
-    const FIELDS = "id,name,message,created_at";
-    const headers = { apikey: key, "Content-Type": "application/json" };
+  function apiStore(base) {
+    const endpoint = base.replace(/\/+$/, "") + "/wishes";
 
-    async function request(path, options) {
-      const res = await fetch(endpoint + path, {
+    async function request(options) {
+      const res = await fetch(endpoint, {
         ...options,
-        headers: { ...headers, ...(options && options.headers) },
         // Older phones and in-app browsers lack this timeout helper.
         signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
       });
@@ -27,15 +23,13 @@ window.Wishes = (function () {
     }
 
     return {
-      list: () => request(`?select=${FIELDS}&order=created_at.desc&limit=200`),
-      add: async (wish) => {
-        const rows = await request(`?columns=name,message&select=${FIELDS}`, {
+      list: () => request(),
+      add: (wish) =>
+        request({
           method: "POST",
-          headers: { Prefer: "return=representation" },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(wish),
-        });
-        return rows[0];
-      },
+        }),
     };
   }
 
@@ -79,8 +73,8 @@ window.Wishes = (function () {
     const count = document.getElementById("wish-count");
     const listEl = document.getElementById("wish-list");
 
-    const connected = Boolean(config.supabaseUrl && config.supabaseKey);
-    const store = connected ? supabaseStore(config.supabaseUrl, config.supabaseKey) : localStore();
+    const connected = Boolean(config.databaseApi);
+    const store = connected ? apiStore(config.databaseApi) : localStore();
     document.getElementById("wish-demo").hidden = connected;
 
     let wishes = [];

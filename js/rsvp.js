@@ -1,11 +1,11 @@
-/* RSVP form. Responses go to the "rsvps" table in Supabase.
-   Guests can send a response but cannot read anyone else's: only you can,
-   in the Supabase Table Editor. Without Supabase the button stays hidden. */
+/* RSVP form. Responses go through the site's server function to the "rsvps"
+   table. Guests can send a response but cannot read anyone else's: only you can,
+   in the Supabase Table Editor. Without databaseApi the button stays hidden. */
 window.Rsvp = (function () {
   function init(config, guestName) {
-    if (!config.supabaseUrl || !config.supabaseKey) return;
+    if (!config.databaseApi) return;
 
-    const endpoint = config.supabaseUrl.replace(/\/+$/, "") + "/rest/v1/rsvps";
+    const endpoint = config.databaseApi.replace(/\/+$/, "") + "/rsvp";
     const dialog = document.getElementById("rsvp-dialog");
     const form = document.getElementById("rsvp-form");
     const nameEl = document.getElementById("rsvp-name");
@@ -74,13 +74,9 @@ window.Rsvp = (function () {
       refreshSubmit();
       setStatus("Sending…");
       try {
-        const res = await fetch(`${endpoint}?columns=name,attending`, {
+        const res = await fetch(endpoint, {
           method: "POST",
-          headers: {
-            apikey: config.supabaseKey,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, attending }),
           // Older phones and in-app browsers lack this timeout helper.
           signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
