@@ -36,7 +36,28 @@
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 60);
-  $("guest-name").textContent = guestParam ? `Dear ${guestParam}` : C.defaultGuest;
+
+  /* "Dear" and the name, written on the envelope only when the link carries a
+     name. A long name is written smaller, and the very longest wrap. */
+  if (guestParam) {
+    const envelopeName = $("envelope-name");
+    envelopeName.textContent = `Dear\n${guestParam}`;
+    envelopeName.hidden = false;
+    const fitEnvelopeName = () => {
+      envelopeName.style.removeProperty("--name-fit");
+      envelopeName.style.whiteSpace = "pre";
+      envelopeName.style.maxWidth = "none";
+      const room = envelopeName.parentElement.offsetWidth * 0.5;
+      const fit = Math.min(1, room / envelopeName.offsetWidth);
+      envelopeName.style.removeProperty("max-width");
+      envelopeName.style.setProperty("--name-fit", Math.max(fit, 0.75));
+      if (fit < 0.75) envelopeName.style.whiteSpace = "pre-line";
+    };
+    fitEnvelopeName();
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('1em "Dawning of a New Day"').then(fitEnvelopeName, () => {});
+    }
+  }
 
   /* ---------- Envelope ---------- */
   $("cover-photo").src = C.coverPhoto;
@@ -44,11 +65,14 @@
   /* ---------- Background music ----------
      Starts on the tap that opens the envelope, because browsers only allow
      sound after a tap. The volume is faded with Web Audio where possible,
-     since iPhones ignore audio.volume. */
-  const MUSIC_VOLUME = Number(C.musicVolume) || 0.4;
-  const FADE_ON_OPEN = 4; // seconds
-  const FADE_ON_UNMUTE = 1.5;
-  const FADE_ON_MUTE = 0.5;
+     since iPhones ignore audio.volume.
+     A page cannot read or change the device volume, so the music is made gentle
+     at the source: the song's loud parts are evened out, its brightness is
+     softened, and the level is kept low, so it stays calm with the device on full. */
+  const MUSIC_VOLUME = Number(C.musicVolume) || 0.18;
+  const FADE_ON_OPEN = 6; // seconds
+  const FADE_ON_UNMUTE = 3;
+  const FADE_ON_MUTE = 1;
 
   let audio = null;
   let musicContext = null;
@@ -57,6 +81,16 @@
   let wantMusic = false;
   let fadeTimer = 0;
   let stopTimer = 0;
+  let fade = { from: 0, to: 0, start: 0, seconds: 0 };
+
+  // Starts and ends slowly, so no fade has an audible edge.
+  const smoothCurve = (progress) => progress * progress * (3 - 2 * progress);
+
+  // Worked out here because iPhones do not report a fading level reliably.
+  function levelAt(time) {
+    const progress = fade.seconds ? Math.min((time - fade.start) / fade.seconds, 1) : 1;
+    return fade.from + (fade.to - fade.from) * smoothCurve(Math.max(progress, 0));
+  }
 
   function setMusic(playing) {
     const btn = $("music-btn");
@@ -75,7 +109,19 @@
       musicContext = new Context();
       musicGain = musicContext.createGain();
       musicGain.gain.value = 0;
-      musicContext.createMediaElementSource(audio).connect(musicGain);
+      const soften = musicContext.createBiquadFilter();
+      soften.type = "highshelf";
+      soften.frequency.value = 5000;
+      soften.gain.value = -3;
+      const evenOut = musicContext.createDynamicsCompressor();
+      evenOut.threshold.value = -30;
+      evenOut.knee.value = 24;
+      evenOut.ratio.value = 4;
+      evenOut.attack.value = 0.03;
+      evenOut.release.value = 0.6;
+      musicContext.createMediaElementSource(audio).connect(soften);
+      soften.connect(evenOut);
+      evenOut.connect(musicGain);
       musicGain.connect(musicContext.destination);
     } catch (err) {
       console.error(err);
@@ -88,9 +134,15 @@
     if (musicGain) {
       const now = musicContext.currentTime;
       const level = musicGain.gain;
+      const from = levelAt(now);
+      const steps = Math.ceil(seconds * 30);
       level.cancelScheduledValues(now);
-      level.setValueAtTime(level.value, now);
-      level.linearRampToValueAtTime(volume, now + seconds);
+      level.setValueAtTime(from, now);
+      for (let step = 1; step <= steps; step++) {
+        const progress = step / steps;
+        level.linearRampToValueAtTime(from + (volume - from) * smoothCurve(progress), now + seconds * progress);
+      }
+      fade = { from, to: volume, start: now, seconds };
       return;
     }
     clearInterval(fadeTimer);
@@ -98,7 +150,7 @@
     const started = performance.now();
     fadeTimer = setInterval(() => {
       const progress = Math.min((performance.now() - started) / (seconds * 1000), 1);
-      audio.volume = from + (volume - from) * progress;
+      audio.volume = from + (volume - from) * smoothCurve(progress);
       if (progress === 1) clearInterval(fadeTimer);
     }, 50);
   }
@@ -107,6 +159,7 @@
     if (musicGain) {
       musicGain.gain.cancelScheduledValues(musicContext.currentTime);
       musicGain.gain.setValueAtTime(0, musicContext.currentTime);
+      fade = { from: 0, to: 0, start: 0, seconds: 0 };
     } else {
       clearInterval(fadeTimer);
       audio.volume = 0;
@@ -150,7 +203,7 @@
       if (wantMusic) muteMusic();
       else {
         playMusic(FADE_ON_UNMUTE);
-        lastInteraction = 0; // turning the music back on restarts the scroll straight away
+        holdUntil = 0; // turning the music back on restarts the scroll straight away
       }
     });
     // Stop while the guest is in another tab or app, and carry on when they return.
@@ -162,23 +215,58 @@
   }
 
   /* ---------- Slow auto-scroll ----------
-     Runs while the music plays. It pauses while the guest is doing anything
-     (scrolling, tapping, typing, reading a pop-up), carries on after
-     SCROLL_RESUME_AFTER of stillness, and stops whenever the music is muted. */
-  const SCROLL_RESUME_AFTER = 4000; // milliseconds
-  let lastInteraction = 0;
+     Runs while the music plays and steps aside whenever a guest is doing anything.
+     Reading a form or a sent message gets a longer wait than a quick scroll. */
+  const SCROLL_START_AFTER = 4500; // milliseconds, once the invitation appears
+  const RESUME_SHORT = 4000; // after scrolling, tapping, keys or moving the mouse
+  const RESUME_LONG = 8000; // after a form, pop-up, the map or scrolling back up
+  const ENGAGING_AREAS = "form, dialog, button, a, input, textarea, iframe, .gallery, .gift, .venue__map";
+  let holdUntil = 0;
+
+  function holdScroll(ms) {
+    holdUntil = Math.max(holdUntil, performance.now() + ms);
+  }
+
+  /* True for as long as the guest is in the middle of something. */
+  function guestIsBusy() {
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    const selector =
+      "dialog[open], form[data-sending]" +
+      (canHover ? ", #wish-form:hover, .venue__map:hover, .gallery:hover, .gift:hover" : "");
+    return (
+      Boolean(document.querySelector(selector)) ||
+      document.activeElement.matches("input, textarea, iframe") ||
+      $("wish-message").value.trim() !== "" || // a wish they have started writing
+      String(window.getSelection()).trim() !== "" // text they have selected to copy
+    );
+  }
 
   function startAutoScroll() {
     const speed = Number(C.autoScrollSpeed) || 0;
     if (!speed || reducedMotion) return;
 
-    const noteInteraction = () => (lastInteraction = performance.now());
-    ["wheel", "touchstart", "touchmove", "pointerdown", "keydown"].forEach((type) =>
-      window.addEventListener(type, noteInteraction, { passive: true })
+    const holdFor = (ms) => () => holdScroll(ms);
+    ["wheel", "touchstart", "touchmove", "keydown"].forEach((type) =>
+      window.addEventListener(type, holdFor(RESUME_SHORT), { passive: true })
     );
+    window.addEventListener(
+      "pointermove",
+      (e) => {
+        if (e.pointerType === "mouse") holdScroll(RESUME_SHORT);
+      },
+      { passive: true }
+    );
+    window.addEventListener(
+      "pointerdown",
+      (e) => holdScroll(e.target.closest && e.target.closest(ENGAGING_AREAS) ? RESUME_LONG : RESUME_SHORT),
+      { passive: true }
+    );
+    document.addEventListener("submit", holdFor(RESUME_LONG), true);
+    document.addEventListener("focusout", holdFor(RESUME_LONG));
+    document.addEventListener("copy", holdFor(RESUME_LONG));
+    document.addEventListener("visibilitychange", holdFor(RESUME_SHORT));
 
-    // Gives guests about 4.5 seconds with the top of the page before it moves.
-    lastInteraction = performance.now() + 500;
+    holdScroll(SCROLL_START_AFTER);
 
     let position = window.scrollY;
     let previous = performance.now();
@@ -187,20 +275,16 @@
       const elapsed = Math.min(now - previous, 100);
       previous = now;
 
-      // A scroll that was not ours, such as dragging the scrollbar.
-      if (Math.abs(window.scrollY - position) > 3) noteInteraction();
+      // A scroll that was not ours: the scrollbar, or going back up to reread.
+      const moved = window.scrollY - position;
+      if (Math.abs(moved) > 3) holdScroll(moved < 0 ? RESUME_LONG : RESUME_SHORT);
 
-      // A pop-up, a form field or the map in use counts as the guest still being
-      // busy. The map is its own page, so its scrolls and taps never reach us.
-      if (
-        document.querySelector("dialog[open], .venue__map:hover") ||
-        document.activeElement.matches("input, textarea, iframe")
-      ) {
-        noteInteraction();
-      }
+      // The wait restarts for as long as they stay busy, so the page never moves
+      // right after a form finishes sending or a message appears.
+      if (guestIsBusy()) holdScroll(RESUME_LONG);
 
       const musicAllows = !C.music || wantMusic;
-      if (!musicAllows || now - lastInteraction < SCROLL_RESUME_AFTER) {
+      if (!musicAllows || now < holdUntil) {
         position = window.scrollY;
       } else {
         const bottom = document.documentElement.scrollHeight - window.innerHeight;
@@ -234,6 +318,7 @@
     );
   }
   $("envelope").addEventListener("click", openInvitation); // the seal sits inside it
+
   $("open-btn").addEventListener("click", openInvitation);
 
   /* ---------- Big date block, used in both violet cards ---------- */
@@ -287,6 +372,18 @@
     return button;
   });
 
+  const dots = C.album.map((src, i) => {
+    const dot = el("button", "gallery__dot");
+    dot.type = "button";
+    dot.setAttribute("aria-label", `Show photo ${i + 1} of ${C.album.length}`);
+    dot.addEventListener("click", () => {
+      current = i;
+      layoutGallery();
+    });
+    $("gallery-dots").append(dot);
+    return dot;
+  });
+
   function layoutGallery() {
     const n = slides.length;
     slides.forEach((slide, i) => {
@@ -303,8 +400,65 @@
       slide.classList.toggle("is-current", far === 0);
       slide.setAttribute("aria-label", far === 0 ? `Photo ${i + 1}` : `Show photo ${i + 1}`);
     });
-    $("gallery-count").textContent = `${current + 1} / ${n}`;
+    dots.forEach((dot, i) => {
+      if (i === current) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+    scheduleAutoSlide(); // any change, including a guest's own, restarts the wait
   }
+
+  /* Auto-slide: 0.8s to move, then about 3 seconds to look at each photo.
+     It only runs while the gallery is on screen and nobody is using it. */
+  const AUTO_SLIDE_MS = 3800;
+  const gallerySection = $("gallery-stage").closest(".gallery");
+  let autoSlideTimer = 0;
+  let galleryOnScreen = false;
+  let galleryBusy = false;
+
+  function scheduleAutoSlide() {
+    clearTimeout(autoSlideTimer);
+    if (reducedMotion || !galleryOnScreen || galleryBusy || document.hidden || slides.length < 2) return;
+    autoSlideTimer = setTimeout(() => step(1), AUTO_SLIDE_MS);
+  }
+
+  function setGalleryBusy(busy) {
+    galleryBusy = busy;
+    scheduleAutoSlide();
+  }
+
+  new IntersectionObserver(
+    ([entry]) => {
+      galleryOnScreen = entry.isIntersecting;
+      scheduleAutoSlide();
+    },
+    { threshold: 0.4 }
+  ).observe(gallerySection);
+
+  document.addEventListener("visibilitychange", scheduleAutoSlide);
+  // The side photos spill past the edge, so keep the section from being scrolled
+  // to them. Not overflow: clip, which stops lazy images past the edge loading.
+  gallerySection.addEventListener("scroll", () => {
+    gallerySection.scrollLeft = 0;
+  });
+  gallerySection.addEventListener("pointerenter", (e) => {
+    if (e.pointerType === "mouse") setGalleryBusy(true);
+  });
+  gallerySection.addEventListener("pointerleave", (e) => {
+    if (e.pointerType === "mouse") setGalleryBusy(false);
+  });
+  gallerySection.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse") setGalleryBusy(true);
+  });
+  window.addEventListener("pointerup", (e) => {
+    if (e.pointerType !== "mouse") setGalleryBusy(false);
+  });
+  window.addEventListener("pointercancel", (e) => {
+    if (e.pointerType !== "mouse") setGalleryBusy(false);
+  });
+  gallerySection.addEventListener("focusin", (e) => {
+    if (e.target.matches(":focus-visible")) setGalleryBusy(true);
+  });
+  gallerySection.addEventListener("focusout", () => setGalleryBusy(false));
 
   const step = (by) => {
     current = (current + by + slides.length) % slides.length;

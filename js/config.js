@@ -20,7 +20,6 @@ window.WEDDING = {
 
   /* Cover page */
   coverLine: "Together with their families",
-  defaultGuest: "Our dear guest", // used when the link has no guest name
 
   /* Invitation wording */
   invitationText: "With thankful hearts to God, we invite you to witness our Holy Matrimony",
@@ -76,8 +75,9 @@ window.WEDDING = {
      assets/music and write its path here. Leave empty for no music. */
   music: "assets/music/sanga-sangai-wedding-song.mp3",
 
-  /* How loud the music gets after fading in, from 0.1 (very quiet) to 1 (full). */
-  musicVolume: 0.4,
+  /* How loud the music gets after fading in. 0.18 stays gentle even with a phone
+     on full volume. Raise it a little (0.25) if it feels too quiet. */
+  musicVolume: 0.18,
 
   /* How fast the page scrolls by itself while the music plays, in pixels per
      second. 30 is a slow reading pace. Use 0 to turn it off. */

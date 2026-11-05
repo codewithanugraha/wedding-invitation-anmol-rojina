@@ -28,6 +28,7 @@ window.Rsvp = (function () {
     /* Confirm stays off until there is a name and a choice. */
     function refreshSubmit() {
       submit.disabled = sending || !nameEl.value.trim() || !form.elements.attending.value;
+      form.toggleAttribute("data-sending", sending); // tells auto-scroll to wait
     }
 
     function showThanks(attending) {

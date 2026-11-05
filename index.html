@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500&family=Playfair+Display:wght@400;700&family=Viaoda+Libre&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500&family=Dawning+of+a+New+Day&family=Playfair+Display:wght@400;700&family=Viaoda+Libre&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
@@ -37,7 +37,9 @@
         <div class="envelope" id="envelope">
           <div class="envelope__back"></div>
           <img class="envelope__photo" id="cover-photo" alt="" />
-          <div class="envelope__pocket"></div>
+          <div class="envelope__pocket">
+            <span class="envelope__name" id="envelope-name" aria-hidden="true" hidden></span>
+          </div>
           <div class="envelope__flap"><span></span></div>
           <button class="seal" id="seal" type="button" aria-label="Open the invitation">
             <span class="seal__initials" data-text="initials"></span>
@@ -46,10 +48,6 @@
           <img class="envelope__floral envelope__floral--b" src="assets/art/floral-corner.webp" alt="" />
         </div>
 
-        <p class="cover__guest">
-          <span class="label">Cordially inviting</span>
-          <strong id="guest-name"></strong>
-        </p>
         <button class="btn" id="open-btn" type="button">Open invitation</button>
       </div>
     </div>
@@ -109,9 +107,13 @@
         <h2 class="heading" id="gallery-title">Photo gallery</h2>
         <div class="gallery__stage" id="gallery-stage"></div>
         <div class="gallery__controls">
-          <button class="gallery__nav" id="gallery-prev" type="button" aria-label="Previous photo">&#8249;</button>
-          <span class="gallery__count" id="gallery-count" aria-live="polite"></span>
-          <button class="gallery__nav" id="gallery-next" type="button" aria-label="Next photo">&#8250;</button>
+          <button class="gallery__nav" id="gallery-prev" type="button" aria-label="Previous photo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" /></svg>
+          </button>
+          <div class="gallery__dots" id="gallery-dots"></div>
+          <button class="gallery__nav" id="gallery-next" type="button" aria-label="Next photo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6" /></svg>
+          </button>
         </div>
       </section>
 
@@ -137,7 +139,10 @@
         <p class="venue__address" id="venue-address"></p>
         <div class="venue__tabs" id="map-tabs"></div>
         <div class="venue__map" id="map-frame"></div>
-        <a class="venue__directions" id="map-directions" target="_blank" rel="noopener" hidden>Get directions</a>
+        <a class="venue__directions" id="map-directions" target="_blank" rel="noopener" aria-label="Get Google Map Directions (opens in a new tab)" hidden>
+          <span>Get Google Map Directions</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8.5 8.5M11 6H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-4" /></svg>
+        </a>
       </section>
 
       <!-- Schedule -->
@@ -186,7 +191,10 @@
         <h2 class="heading" id="gift-title">With gratitude</h2>
         <p class="gift__note" id="gift-note"></p>
         <div class="gift__qr" id="gift-qr"></div>
-        <a class="gift__save" id="gift-save" download hidden>Save QR code</a>
+        <a class="gift__save" id="gift-save" download hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.500 10.500 12 15l4.500-4.500M5 19.500h14" /></svg>
+          Download QR Code
+        </a>
       </section>
 
       <footer class="closing">

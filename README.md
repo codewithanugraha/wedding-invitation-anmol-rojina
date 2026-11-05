@@ -56,6 +56,6 @@ https://your-site.vercel.app/?name=Pawan%20Gurung
 - **Removing the gift section:** set `gift: null` in the config file.
 - **QR code:** anyone with the link can see and save the QR code in the gift section.
 - **Music:** only use a track you have the right to share. Browsers start sound only after a tap, so it begins when the guest opens the envelope. Change how loud it gets with `musicVolume` in `js/config.js`.
-- **Auto-scroll:** the page starts scrolling slowly about 4.5 seconds after the invitation opens, while the music plays. It pauses when a guest scrolls, taps or types and carries on after 4 seconds of stillness, and it stops while the music is muted. Change the speed with `autoScrollSpeed` in `js/config.js`, or use `0` to turn it off.
+- **Auto-scroll:** the page starts scrolling slowly about 4.5 seconds after the invitation opens, while the music plays. It waits whenever a guest scrolls, taps, moves the mouse, uses a form or the map, starts a wish, or selects text, and it stops while the music is muted. Change the speed with `autoScrollSpeed` in `js/config.js`, or use `0` to turn it off.
 - **Artwork:** the images in `assets/art` come from the licensed template, so keep your use within that licence.
 # wedding-invitation-anmol-rojina
