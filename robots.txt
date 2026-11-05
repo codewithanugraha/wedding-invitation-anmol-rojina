@@ -8,7 +8,10 @@ Allow: /
 
 # Link previews when the invitation is shared in chat apps.
 User-agent: facebookexternalhit
+User-agent: Facebot
 User-agent: WhatsApp
+User-agent: Viber
+User-agent: Discordbot
 User-agent: TelegramBot
 User-agent: Twitterbot
 User-agent: LinkedInBot

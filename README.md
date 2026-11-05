@@ -12,11 +12,7 @@ To preview it, double-click `index.html`.
 
 **Photos:** copy your pictures into `assets/photos`, then list them in `coverPhoto`, `heroPhoto` and `album` in the config file, for example `"assets/photos/our-photo.jpg"`. Keep each photo under about 500 KB so the page loads quickly on phones.
 
-**Link preview:** the text shown when the link is shared on WhatsApp or Facebook is near the top of `index.html`. Change it by hand. To add a preview picture once the site is live, put this line beside the others, using your own site's full address:
-
-```html
-<meta property="og:image" content="https://your-site.vercel.app/assets/photos/our-photo.jpg" />
-```
+**Link preview:** the text and image shown when the link is shared on WhatsApp or Facebook are near the top of `index.html`. Change them by hand. The image is `assets/art/share-image.jpg` (1200 x 630). If the site moves to a new address, update `og:url`, `og:image` and `twitter:image` there too, then refresh the preview in the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/).
 
 ## 2. Connect the guest book and RSVP (free)
 
