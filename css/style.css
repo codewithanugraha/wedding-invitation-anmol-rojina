@@ -252,10 +252,6 @@ textarea {
   clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
 }
 
-.ink-filter {
-  position: absolute;
-}
-
 /* "Dear" and the guest's name, handwritten in warm brown ink to go with the wax seal.
    It sits in the lower left, the open corner opposite the bouquet. */
 .envelope__name {
@@ -272,8 +268,7 @@ textarea {
   white-space: pre;
   color: var(--envelope-ink);
   transform: translateY(-50%) rotate(-1.5deg);
-  /* Soaked into the paper: rough, patchy edges, with the grain showing through. */
-  filter: url("#ink-soak");
+  /* Ink in the paper: the grain shows through the letters, and the edges stay sharp. */
   mix-blend-mode: multiply;
   opacity: 0.8;
 }

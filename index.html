@@ -27,26 +27,6 @@
   <body class="is-sealed">
     <noscript><p class="noscript">Please turn on JavaScript to view this invitation.</p></noscript>
 
-    <!-- Roughens the handwriting on the envelope so the ink looks soaked into the paper. -->
-    <svg class="ink-filter" width="0" height="0" aria-hidden="true" focusable="false">
-      <filter id="ink-soak" x="-5%" y="-15%" width="110%" height="130%" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="4" result="fibres" />
-        <feDisplacementMap in="SourceGraphic" in2="fibres" scale="0.8" xChannelSelector="R" yChannelSelector="G" result="rough" />
-        <feGaussianBlur in="rough" stdDeviation="0.15" result="soft" />
-        <feGaussianBlur in="rough" stdDeviation="1.1" result="spread" />
-        <feComponentTransfer in="spread" result="bleed">
-          <feFuncA type="linear" slope="0.28" />
-        </feComponentTransfer>
-        <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="3" seed="9" result="blotches" />
-        <feColorMatrix in="blotches" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.5 0 0 0 0.3" result="patchy" />
-        <feComposite in="soft" in2="patchy" operator="in" result="ink" />
-        <feMerge>
-          <feMergeNode in="bleed" />
-          <feMergeNode in="ink" />
-        </feMerge>
-      </filter>
-    </svg>
-
     <!-- ============ Envelope cover ============ -->
     <div class="cover" id="cover">
       <div class="cover__inner">
