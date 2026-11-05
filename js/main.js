@@ -3,6 +3,23 @@
   const $ = (id) => document.getElementById(id);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* No zooming. iPhones ignore the viewport setting, so the gesture is stopped here,
+     along with Ctrl or Cmd + scroll, trackpad pinch and the zoom shortcuts. */
+  const stopZoom = (e) => e.preventDefault();
+  ["gesturestart", "gesturechange", "gestureend"].forEach((name) =>
+    document.addEventListener(name, stopZoom, { passive: false })
+  );
+  window.addEventListener(
+    "wheel",
+    (e) => {
+      if (e.ctrlKey || e.metaKey) e.preventDefault();
+    },
+    { passive: false }
+  );
+  window.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && ["+", "=", "-", "_", "0"].includes(e.key)) e.preventDefault();
+  });
+
   function el(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
