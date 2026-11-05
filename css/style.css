@@ -57,6 +57,17 @@ body.is-sealed {
   overflow: hidden;
 }
 
+/* Backup in case a phone browser marks up text anyway: Chrome on iPhone and Safari. */
+chrome_annotation {
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+}
+
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
 img {
   display: block;
   max-width: 100%;
