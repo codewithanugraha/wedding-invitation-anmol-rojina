@@ -3,11 +3,24 @@
   const $ = (id) => document.getElementById(id);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* No zooming. iPhones ignore the viewport setting, so the gesture is stopped here,
-     along with Ctrl or Cmd + scroll, trackpad pinch and the zoom shortcuts. */
-  const stopZoom = (e) => e.preventDefault();
+  /* No zooming. iPhones ignore the viewport setting, so a second finger is stopped here,
+     along with Ctrl or Cmd + scroll, trackpad pinch and the zoom shortcuts. One finger
+     still scrolls and swipes as normal. */
+  const stopZoom = (e) => {
+    if (e.cancelable) e.preventDefault();
+  };
+  const blockers = { passive: false, capture: true };
   ["gesturestart", "gesturechange", "gestureend"].forEach((name) =>
-    document.addEventListener(name, stopZoom, { passive: false })
+    document.addEventListener(name, stopZoom, blockers)
+  );
+  ["touchstart", "touchmove"].forEach((name) =>
+    document.addEventListener(
+      name,
+      (e) => {
+        if (e.touches.length > 1 || (e.scale && e.scale !== 1)) stopZoom(e);
+      },
+      blockers
+    )
   );
   window.addEventListener(
     "wheel",
