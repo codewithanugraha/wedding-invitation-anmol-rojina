@@ -177,6 +177,9 @@
       window.addEventListener(type, noteInteraction, { passive: true })
     );
 
+    // Gives guests about 4.5 seconds with the top of the page before it moves.
+    lastInteraction = performance.now() + 500;
+
     let position = window.scrollY;
     let previous = performance.now();
 

@@ -68,6 +68,6 @@ https://your-site.netlify.app/?name=Pawan%20Gurung
 - **Removing the gift section:** set `gift: null` in the config file.
 - **QR code:** anyone with the link can see and save the QR code in the gift section.
 - **Music:** only use a track you have the right to share. Browsers start sound only after a tap, so it begins when the guest opens the envelope. Change how loud it gets with `musicVolume` in `js/config.js`.
-- **Auto-scroll:** the page starts scrolling slowly as soon as the invitation opens, while the music plays. It pauses when a guest scrolls, taps or types and carries on after 4 seconds of stillness, and it stops while the music is muted. Change the speed with `autoScrollSpeed` in `js/config.js`, or use `0` to turn it off.
+- **Auto-scroll:** the page starts scrolling slowly about 4.5 seconds after the invitation opens, while the music plays. It pauses when a guest scrolls, taps or types and carries on after 4 seconds of stillness, and it stops while the music is muted. Change the speed with `autoScrollSpeed` in `js/config.js`, or use `0` to turn it off.
 - **Artwork:** `floral-corner.webp`, `floral-spray.webp`, `seal.webp`, `paper-texture.webp` and `pavilion.svg` in `assets/art` were created for this project. Anything else you add there needs to be yours to use.
 # wedding-invitation-anmol-rojina

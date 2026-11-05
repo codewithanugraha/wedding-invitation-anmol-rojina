@@ -19,7 +19,8 @@ window.Wishes = (function () {
       const res = await fetch(endpoint + path, {
         ...options,
         headers: { ...headers, ...(options && options.headers) },
-        signal: AbortSignal.timeout(12000),
+        // Older phones and in-app browsers lack this timeout helper.
+        signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
       });
       if (!res.ok) throw new Error("Guest book request failed: " + res.status);
       return res.json();
@@ -161,10 +162,13 @@ window.Wishes = (function () {
       count.textContent = `${messageEl.value.length} / ${MAX_MESSAGE}`;
     });
 
-    form.addEventListener("input", () => {
-      setStatus("");
-      refreshSubmit();
-    });
+    // "change" as well: some phones send only that for autofill.
+    ["input", "change"].forEach((type) =>
+      form.addEventListener(type, () => {
+        setStatus("");
+        refreshSubmit();
+      })
+    );
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();

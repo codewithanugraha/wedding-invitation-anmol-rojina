@@ -39,10 +39,13 @@ window.Rsvp = (function () {
       done.focus();
     }
 
-    form.addEventListener("input", () => {
-      setStatus("");
-      refreshSubmit();
-    });
+    // "change" as well: some phones send only that for radio buttons and autofill.
+    ["input", "change"].forEach((type) =>
+      form.addEventListener(type, () => {
+        setStatus("");
+        refreshSubmit();
+      })
+    );
 
     document.getElementById("rsvp-open").addEventListener("click", () => {
       // Opening again after a response starts a fresh form.
@@ -79,7 +82,8 @@ window.Rsvp = (function () {
             Prefer: "return=minimal",
           },
           body: JSON.stringify({ name, attending }),
-          signal: AbortSignal.timeout(12000),
+          // Older phones and in-app browsers lack this timeout helper.
+          signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
         });
         if (!res.ok) throw new Error("RSVP request failed: " + res.status);
         setStatus("");

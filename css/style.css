@@ -665,10 +665,11 @@ textarea {
 }
 
 .card__text {
-  margin-top: 24px;
+  margin-top: 28px;
   white-space: pre-line;
-  font-size: 19px;
-  line-height: 1.45;
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--on-violet-soft);
   text-wrap: balance;
 }
 
@@ -713,36 +714,36 @@ textarea {
 }
 
 .family__label {
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .family__name {
   font-size: 18px;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .couple {
-  margin-top: 22px;
+  margin-top: 14px;
 }
 
 .couple__name {
   font-family: var(--display);
-  font-size: clamp(32px, 9vw, 44px);
+  font-size: 42px;
   font-weight: 400;
   line-height: 1.15;
 }
 
 .couple__and {
   display: block;
-  margin-block: 4px;
-  font-size: 20px;
+  margin-block: 2px;
+  font-size: 18px;
   line-height: 1.2;
   color: var(--on-violet-soft);
 }
 
 .verse {
   max-width: 340px;
-  margin: 24px auto 0;
+  margin: 28px auto 0;
 }
 
 .verse__text {
@@ -754,7 +755,7 @@ textarea {
 }
 
 .verse__ref {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 /* Saturday | 12 | June 2027 */
@@ -763,13 +764,13 @@ textarea {
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   column-gap: 16px;
-  max-width: 360px;
-  margin: 32px auto 0;
+  max-width: 420px;
+  margin: 28px auto 0;
 }
 
 .datebox__day {
   font-family: var(--display);
-  font-size: 64px;
+  font-size: 56px;
   line-height: 1;
 }
 
@@ -786,8 +787,8 @@ textarea {
 }
 
 .event__time {
-  margin-top: 6px;
-  font-size: 26px;
+  margin-top: 4px;
+  font-size: 24px;
   font-weight: 500;
   line-height: 1.2;
 }
@@ -805,9 +806,9 @@ textarea {
   color: var(--on-violet-soft);
 }
 
-/* Phones: same arrangement as desktop.
-   Spacing: 24px between groups, 2 to 6px inside a group.
-   Type: 10px labels, 15px text, 20px time, 28px names, 44px date. */
+/* Phones: the same rhythm as desktop, scaled down.
+   Between groups: 28px on desktop, 24px here. Inside a group: 2 to 6px.
+   Type, desktop then here: labels 12/10, text 18/15, time 24/20, names 42/28, date 56/44. */
 @media (max-width: 480px) {
   .card:not(.card--white) {
     padding: 28px 16px 30px;
