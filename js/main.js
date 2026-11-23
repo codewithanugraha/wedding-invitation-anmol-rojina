@@ -400,15 +400,16 @@
   $("events").append(serviceItem);
 
   /* ---------- Photo gallery: a 3D carousel you can swipe ---------- */
-  let current = Math.min(2, C.album.length - 1);
+  let current = 0; // the album is in order, so it opens on the first photo
 
   const slides = C.album.map((src, i) => {
     const button = el("button", "gallery__item");
     button.type = "button";
     const img = el("img");
     img.src = src;
-    img.alt = "";
+    img.alt = `Engagement photo ${i + 1} of ${C.album.length}`;
     img.loading = "lazy";
+    img.decoding = "async";
     button.append(img);
     button.addEventListener("click", () => {
       if (swiped || i === current) return;
@@ -613,57 +614,65 @@
   const mapsEmbed = (q) => `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
   const mapsWalkEmbed = (from, to) =>
     `https://www.google.com/maps?saddr=${encodeURIComponent(from)}&daddr=${encodeURIComponent(to)}&dirflg=w&z=18&output=embed`;
-  const venueText = (event) => `${event.venue}, ${event.address}`;
+  /* The venue, and where to park if that is elsewhere, each with its own Directions link. */
+  const ICON_VENUE =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.8 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.3"/></svg>';
+  const ICON_PARKING =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16.5V12l1.8-4.6A1.5 1.5 0 0 1 8.2 6.5h7.6a1.5 1.5 0 0 1 1.4.9L19 12v4.5M5 12h14M5 16.5h14M6.5 16.5V18.5M17.5 16.5V18.5"/><circle cx="8.2" cy="14.2" r=".6"/><circle cx="15.8" cy="14.2" r=".6"/></svg>';
+  const OPENS_ICON =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8.5 8.5M11 6H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-4" /></svg>';
 
-  $("venue-address").textContent = venueText(C.events[0]);
+  function placeCard({ icon, label, name, detail, href }) {
+    const row = el("div", "place");
+    const iconEl = el("span", "place__icon");
+    iconEl.innerHTML = icon; // fixed icons from this file, never guest text
+    const body = el("div", "place__body");
+    body.append(el("p", "place__name", name), el("p", "place__detail", detail));
+    const link = el("a", "place__link");
+    link.href = href;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.setAttribute("aria-label", `Directions to ${label} (opens in a new tab)`);
+    link.append(el("span", null, "Directions"));
+    link.insertAdjacentHTML("beforeend", OPENS_ICON);
+    row.append(iconEl, body, link);
+    return row;
+  }
 
-  // One tab per place to show: the venue, and where to park if that is elsewhere.
-  const mapped = C.events.filter((event) => event.mapQuery);
-  const places = mapped.flatMap((event) => {
-    const venue = {
-      label: mapped.length > 1 ? event.title : "Venue",
-      text: venueText(event),
-      mapTitle: `Map to ${event.venue}`,
-      mapQuery: event.mapQuery,
-    };
-    if (!event.parking) return [venue];
-    return [
-      {
-        label: "Parking",
-        text: event.parking.note,
-        mapTitle: `Map to the parking area for ${event.venue}`,
-        mapQuery: event.parking.mapQuery,
-        mapLink: event.parking.mapLink,
-        embed: mapsWalkEmbed(event.parking.walkFrom, event.parking.mapQuery),
-      },
-      venue,
+  const venueEvent = C.events.find((event) => event.mapQuery);
+  if (venueEvent) {
+    const parking = venueEvent.parking;
+    const cards = [
+      placeCard({
+        icon: ICON_VENUE,
+        label: venueEvent.venue,
+        name: venueEvent.venue,
+        detail: venueEvent.address,
+        href: mapsDirections(venueEvent.mapQuery),
+      }),
     ];
-  });
-  function showMap(place, button) {
-    $("map-tabs")
-      .querySelectorAll("button")
-      .forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-    $("venue-address").textContent = place.text;
+    if (parking) {
+      cards.push(
+        placeCard({
+          icon: ICON_PARKING,
+          label: "the parking",
+          name: "Parking",
+          detail: [parking.name, parking.note].filter(Boolean).join(" · "),
+          href: parking.mapLink || mapsDirections(parking.mapQuery),
+        })
+      );
+      $("venue-title").textContent = "Venue & parking";
+    }
+    $("venue-places").replaceChildren(...cards);
+
+    // One map: the walk between the two when there is separate parking, else the venue.
     const frame = document.createElement("iframe");
-    frame.title = place.mapTitle;
+    frame.title = parking ? `Map of the walk from the parking to ${venueEvent.venue}` : `Map to ${venueEvent.venue}`;
     frame.loading = "lazy";
     frame.referrerPolicy = "strict-origin-when-cross-origin"; // keeps ?name= out of what Google receives
-    frame.src = place.embed || mapsEmbed(place.mapQuery);
+    frame.src = parking ? mapsWalkEmbed(parking.walkFrom, parking.mapQuery) : mapsEmbed(venueEvent.mapQuery);
     $("map-frame").replaceChildren(frame);
-    $("map-frame").classList.toggle("venue__map--route", Boolean(place.embed));
-    $("map-directions").href = place.mapLink || mapsDirections(place.mapQuery);
-    $("map-directions").hidden = false;
-  }
-  if (places.length) {
-    places.forEach((place) => {
-      const button = el("button", "tab", place.label);
-      button.type = "button";
-      button.addEventListener("click", () => showMap(place, button));
-      $("map-tabs").append(button);
-    });
-    // Open on the first tab.
-    $("map-tabs").querySelector("button").click();
-    if (places.length === 1) $("map-tabs").hidden = true;
+    $("map-frame").classList.toggle("venue__map--route", Boolean(parking));
   } else {
     $("map-frame").append(
       el("p", "venue__empty", "The map will appear here once your venue is added to js/config.js.")

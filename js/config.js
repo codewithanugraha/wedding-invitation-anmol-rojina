@@ -12,9 +12,9 @@ window.WEDDING = {
   initials: "A & R", // shown on the wax seal
 
   /* The date and start time of the wedding */
-  date: "2026-12-13", // the same day on the English calendar: used for the countdown and Add to calendar
-  nepaliDate: { year: 2083, month: "Mangsir", day: 27, daysInMonth: 29 }, // shown to guests and on the calendar
-  time: "10:30", // 24-hour clock, when Holy Matrimony starts: used for the countdown and calendar
+  date: "2026-12-10", // the same day on the English calendar: used for the countdown and Add to calendar
+  nepaliDate: { year: 2083, month: "Mangsir", day: 24, daysInMonth: 29 }, // shown to guests and on the calendar
+  time: "12:30", // 24-hour clock, when Holy Matrimony starts: used for the countdown and calendar
   utcOffset: "+05:45", // the time zone of the WEDDING venue, e.g. +05:45 for Nepal, +05:30 for India
   calendarHours: 4, // how long the event lasts in guests' calendars
 
@@ -41,15 +41,17 @@ window.WEDDING = {
   events: [
     {
       title: "Holy Matrimony",
-      time: "10:30 AM",
+      time: "12:30 PM",
       venue: "Beth Shalom Putalisadak Church",
       address: "Ramshah Path, Putalisadak, Kathmandu",
       mapQuery: "Beth Shalom Putalisadak Church, Ramshah Path, Putalisadak, Kathmandu",
-      /* Parking is away from the church, so the venue shows a Parking tab. The map draws the
-         walking route from walkFrom (the church) to mapQuery (the parking pin), and mapLink
-         is what the directions link opens. Remove this block to hide the tab. */
+      /* Parking is away from the church, so the section shows it beside the venue, and the
+         map draws the walk from walkFrom (the church) to mapQuery (the parking pin).
+         mapLink is what the parking's Directions link opens. Remove this block to show
+         the venue alone. */
       parking: {
-        note: "Please park here, a 3-minute walk from the church.",
+        name: "Near Neha Khaja Ghar",
+        note: "3 min walk",
         walkFrom: "27.7001926,85.3215593",
         mapQuery: "27.698845,85.321277",
         mapLink: "https://maps.app.goo.gl/XpSAqcpAfBZ3dQNk7",
@@ -59,11 +61,11 @@ window.WEDDING = {
 
   /* Schedule. Icons available: rings, camera, toast, dinner, cake, music, heart */
   schedule: [
-    { time: "10:00 AM", title: "Guests arrive and are seated", icon: "heart" },
-    { time: "10:30 AM", title: "Holy Matrimony", icon: "rings" },
-    { time: "11:45 AM", title: "Group photographs", icon: "camera" },
-    { time: "1:00 PM", title: "Lunch is served", icon: "dinner" },
-    { time: "2:00 PM", title: "Cutting of the cake", icon: "cake" },
+    { time: "12:00 PM", title: "Guests arrive and are seated", icon: "heart" },
+    { time: "12:30 PM", title: "Holy Matrimony", icon: "rings" },
+    { time: "1:45 PM", title: "Group photographs", icon: "camera" },
+    { time: "3:00 PM", title: "Lunch is served", icon: "dinner" },
+    { time: "4:00 PM", title: "Cutting of the cake", icon: "cake" },
   ],
 
   /* Photos. Put your pictures in assets/photos and list them here.
@@ -71,13 +73,17 @@ window.WEDDING = {
      heroPhoto: the tilted photo at the top of the page (4:5 portrait). */
   coverPhoto: "assets/photos/couple-landscape.png",
   heroPhoto: "assets/photos/couple-portrait.png",
+  /* Engagement day, in order. Each is a 3:4 web copy (.webp) of the original .png in the
+     same folder; the gallery cards are 3:4 too. */
   album: [
-    "assets/photos/album-1.svg",
-    "assets/photos/album-2.svg",
-    "assets/photos/album-3.svg",
-    "assets/photos/album-4.svg",
-    "assets/photos/album-5.svg",
-    "assets/photos/album-6.svg",
+    "assets/photos/engagement/1.webp",
+    "assets/photos/engagement/2.webp",
+    "assets/photos/engagement/3.webp",
+    "assets/photos/engagement/4.webp",
+    "assets/photos/engagement/5.webp",
+    "assets/photos/engagement/6.webp",
+    "assets/photos/engagement/7.webp",
+    "assets/photos/engagement/8.webp",
   ],
 
   /* Optional background music: put an .mp3 you have the rights to use in

@@ -1338,39 +1338,6 @@ textarea {
   text-align: center;
 }
 
-.venue__address {
-  margin-top: 6px;
-  font-size: 17px;
-  color: var(--olive);
-}
-
-.venue__tabs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.tab {
-  min-height: 40px;
-  padding: 6px 16px;
-  border: 1px solid #c3c9b2;
-  border-radius: 999px;
-  background: #fff;
-  color: var(--sage-dark);
-  font-family: var(--sans);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.tab[aria-pressed="true"] {
-  background: var(--sage);
-  color: #fff;
-}
-
 .venue__map {
   margin-top: 14px;
   overflow: hidden;
@@ -2009,6 +1976,7 @@ textarea.panel__input {
   font-weight: 500;
   letter-spacing: 0.26em;
   line-height: 1.4;
+  text-wrap: balance; /* a heading that wraps splits evenly, never leaving one word alone */
   color: var(--sage-dark);
 }
 
@@ -2086,15 +2054,91 @@ textarea.panel__input {
 }
 
 
-.venue__address {
-  margin-top: 12px;
-  font-size: 16px;
-  line-height: 1.45;
+/* Two simple rows, the venue and the parking, with a hairline between them. */
+.places {
+  margin-top: 18px;
+  border-block: 1px solid var(--petal);
+  text-align: left;
+}
+
+.place {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 2px;
+}
+
+.place + .place {
+  border-top: 1px solid var(--petal);
+}
+
+.place__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--petal);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--sage);
+}
+
+.place__icon svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.place__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.place__name {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.place__detail {
+  margin-top: 2px;
+  font-size: 15px;
+  line-height: 1.4;
   color: var(--ink-soft);
 }
 
+.place__link {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 2px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--sage-dark);
+  text-underline-offset: 4px;
+}
+
+.place__link svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .venue__map {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 /* The walking route is taller than a single pin. Google's From/To card sits on top of the
@@ -2212,7 +2256,6 @@ textarea.panel__input {
     font-size: 14.5px;
   }
 
-  .venue__address,
   .gift__note,
   .closing__text,
   .closing__verse .verse__text {
