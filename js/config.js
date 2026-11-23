@@ -14,7 +14,7 @@ window.WEDDING = {
   /* The date and start time of the wedding */
   date: "2026-12-10", // the same day on the English calendar: used for the countdown and Add to calendar
   nepaliDate: { year: 2083, month: "Mangsir", day: 24, daysInMonth: 29 }, // shown to guests and on the calendar
-  time: "12:30", // 24-hour clock, when Holy Matrimony starts: used for the countdown and calendar
+  time: "12:00", // 24-hour clock, when the programme starts: used for the countdown and calendar
   utcOffset: "+05:45", // the time zone of the WEDDING venue, e.g. +05:45 for Nepal, +05:30 for India
   calendarHours: 4, // how long the event lasts in guests' calendars
 
@@ -41,7 +41,7 @@ window.WEDDING = {
   events: [
     {
       title: "Holy Matrimony",
-      time: "12:30 PM",
+      time: "12:00 PM",
       venue: "Beth Shalom Putalisadak Church",
       address: "Ramshah Path, Putalisadak, Kathmandu",
       mapQuery: "Beth Shalom Putalisadak Church, Ramshah Path, Putalisadak, Kathmandu",
@@ -59,13 +59,16 @@ window.WEDDING = {
     },
   ],
 
-  /* Schedule. Icons available: rings, camera, toast, dinner, cake, music, heart */
+  /* Schedule, in order. Each item has a short title and an icon. Optional extras:
+     note: "..." adds a line under the title, and  time: "12:30 PM"  shows times beside them.
+     Icons: chair, entrance, cross, rings, bible, star, heart, candle, cake, camera, dinner,
+     music, toast */
   schedule: [
-    { time: "12:00 PM", title: "Guests arrive and are seated", icon: "heart" },
-    { time: "12:30 PM", title: "Holy Matrimony", icon: "rings" },
-    { time: "1:45 PM", title: "Group photographs", icon: "camera" },
-    { time: "3:00 PM", title: "Lunch is served", icon: "dinner" },
-    { time: "4:00 PM", title: "Cutting of the cake", icon: "cake" },
+    { title: "Welcome and worship", icon: "entrance" }, // guests seated, couple's entrance, prayer
+    { title: "Holy Matrimony and sermon", icon: "rings" },
+    { title: "Performances and thanksgiving", icon: "star" }, // talent show, dance, family thanks
+    { title: "Blessing and cake cutting", icon: "cake" },
+    { title: "Photos and wedding feast", icon: "dinner" },
   ],
 
   /* Photos. Put your pictures in assets/photos and list them here.

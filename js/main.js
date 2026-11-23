@@ -697,18 +697,28 @@
     cake: '<path d="M5 20v-7h14v7M3 20h18M7.500 13V9.500h9V13M12 9.500V6M12 3.500v.5M5 16c1.500 1.500 3 1.500 4.500 0s3-1.500 4.500 0 3.500 1.500 5 0"/>',
     music: '<path d="M9 18V6l11-2v12"/><circle cx="6.500" cy="18" r="2.500"/><circle cx="17.500" cy="16" r="2.500"/>',
     heart: '<path d="M12 20.500C3 14.500 3.500 7 8 6c2-.4 3.200.8 4 2.200C12.800 6.800 14 5.600 16 6c4.500 1 5 8.500-4 14.500z"/>',
+    chair: '<path d="M7.5 3.5h9v7.5h-9zM5.5 11h13v3h-13zM7.5 14v6.5M16.5 14v6.5"/>',
+    entrance: '<path d="M5 20.500V10a7 7 0 0 1 14 0v10.500M3 20.500h18M9.500 20.500v-5.500a2.500 2.500 0 0 1 5 0v5.500"/>',
+    cross: '<path d="M12 3v18M7 8.500h10"/>',
+    bible: '<path d="M5.500 5A1.500 1.500 0 0 1 7 3.500h11.500v14H7a1.500 1.500 0 0 0-1.500 1.500zM5.500 19A1.500 1.500 0 0 0 7 20.500h11.500v-3M12 6.500v6.500M9.500 9h5"/>',
+    star: '<path d="M12 3.500l2.500 5.200 5.700.7-4.200 3.900 1.100 5.700L12 16.200l-5.100 2.800 1.100-5.700-4.200-3.900 5.700-.7z"/>',
+    candle: '<path d="M9 20.500V11h6v9.500M6.500 20.500h11M12 11V8.800M12 3c1.600 1.500 1.600 3.200 0 4.800-1.600-1.600-1.600-3.300 0-4.800z"/>',
   };
+  // The start time only: the day has no fixed end.
+  $("schedule-start").textContent = `Starts at ${C.events[0].time}`;
+  // Times are optional: without any, the schedule is an order of service with no time column.
+  const timed = C.schedule.some((item) => item.time);
+  $("timeline").classList.toggle("timeline--untimed", !timed);
   $("timeline").style.gridTemplateRows = `repeat(${C.schedule.length}, auto)`;
   C.schedule.forEach((item, i) => {
     const row = el("li", "timeline__row");
     row.style.setProperty("--row", i + 1);
     const medal = el("span", "timeline__medal");
     medal.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[item.icon] || ICONS.heart}</svg>`;
-    row.append(
-      el("span", "timeline__time", item.time),
-      medal,
-      el("span", "timeline__title", item.title)
-    );
+    const text = el("span", "timeline__title", item.title);
+    if (item.note) text.append(el("span", "timeline__note", item.note));
+    if (timed) row.append(el("span", "timeline__time", item.time || ""));
+    row.append(medal, text);
     $("timeline").append(row);
   });
 

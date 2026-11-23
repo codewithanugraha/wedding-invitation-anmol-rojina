@@ -2111,6 +2111,37 @@ textarea.panel__input {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
+.timeline__start {
+  margin-top: 8px;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.timeline__note {
+  display: block;
+  margin-top: 1px;
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* No times: the icons and line sit on the left, the titles beside them. */
+.timeline--untimed {
+  grid-template-columns: 38px minmax(0, max-content);
+  row-gap: 12px;
+}
+
+.timeline--untimed::before,
+.timeline--untimed .timeline__medal {
+  grid-column: 1;
+}
+
+.timeline--untimed .timeline__title {
+  grid-column: 2;
+}
+
 /* Sections on the paper background */
 .gallery__stage {
   margin-top: 24px;
