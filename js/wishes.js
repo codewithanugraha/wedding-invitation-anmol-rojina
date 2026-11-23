@@ -63,7 +63,7 @@ window.Wishes = (function () {
     return new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(d);
   }
 
-  function init(config, guestName) {
+  function init(config) {
     const form = document.getElementById("wish-form");
     const nameEl = document.getElementById("wish-name");
     const messageEl = document.getElementById("wish-message");
@@ -82,7 +82,6 @@ window.Wishes = (function () {
     let loading = false;
     let sending = false;
 
-    if (guestName) nameEl.value = guestName;
 
     function setStatus(text, isError) {
       status.textContent = text;

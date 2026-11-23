@@ -198,19 +198,28 @@ textarea {
   text-align: center;
 }
 
+/* Three levels: a quiet line above, the names strongest, then the date and time,
+   smaller and softer, with a little more air around the names. */
+.cover .label {
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  color: #6b7362;
+}
+
 .cover__names {
-  margin-top: 10px;
+  margin-top: 12px;
   font-family: var(--display);
-  font-size: clamp(34px, 10vw, 50px);
+  font-size: clamp(30px, 8.8vw, 50px); /* a little smaller on phones; desktop unchanged */
   font-weight: 400;
   line-height: 1.1;
   text-transform: uppercase;
-  color: var(--sage);
+  color: var(--sage-dark);
 }
 
 .cover__date {
-  margin-top: 4px;
-  font-size: 20px;
+  margin-top: 10px;
+  font-size: clamp(16px, 4.3vw, 19px);
+  letter-spacing: 0.01em;
   color: var(--olive);
 }
 
@@ -491,6 +500,24 @@ textarea {
   50% {
     rotate: -1deg;
   }
+}
+
+.cover__time {
+  margin-left: 0.35em;
+  white-space: nowrap;
+}
+
+.cover__time svg {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 0.25em;
+  vertical-align: -0.06em; /* sits on the same line as the numbers */
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* ---------- Page ---------- */
@@ -1959,6 +1986,42 @@ textarea.panel__input {
 
 .music.is-playing .music__bars {
   display: flex;
+}
+
+/* Smaller on phones, so it covers less of the page. An invisible ring around it keeps
+   the tap area at 48px, so it is still easy to press. */
+@media (max-width: 640px) {
+  .music {
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    width: 38px;
+    height: 38px;
+  }
+
+  .music::before {
+    inset: 3px;
+  }
+
+  .music::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+  }
+
+  .music__note {
+    width: 17px;
+    height: 17px;
+  }
+
+  .music__bars {
+    gap: 2px;
+    height: 13px;
+  }
+
+  .music__bars i {
+    width: 2.5px;
+  }
 }
 
 /* ---------- One style for the whole page ----------

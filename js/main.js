@@ -77,6 +77,15 @@
   });
   document.querySelectorAll("[data-names]").forEach((node) => (node.textContent = names));
   document.querySelectorAll("[data-long-date]").forEach((node) => (node.textContent = longDate));
+  // The cover adds the start time after a small clock. The time never splits across lines.
+  const CLOCK_ICON =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>';
+  document.querySelectorAll("[data-date-time]").forEach((node) => {
+    const time = el("span", "cover__time");
+    time.innerHTML = CLOCK_ICON; // fixed icon from this file, never guest text
+    time.append(el("span", null, C.events[0].time));
+    node.replaceChildren(document.createTextNode(`${longDate} `), time);
+  });
 
   /* ---------- Guest name: share links like  yoursite.com/?name=Pawan%20Gurung ---------- */
   const guestParam = (new URLSearchParams(location.search).get("name") || "")
@@ -794,6 +803,7 @@
   }
 
   /* ---------- Guest book and RSVP ---------- */
-  window.Wishes.init(C, guestParam);
-  window.Rsvp.init(C, guestParam);
+  // Guests type their own name in the forms: the ?name= link only addresses the envelope.
+  window.Wishes.init(C);
+  window.Rsvp.init(C);
 })();

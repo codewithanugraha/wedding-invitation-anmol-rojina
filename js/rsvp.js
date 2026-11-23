@@ -2,7 +2,7 @@
    table. Guests can send a response but cannot read anyone else's: only you can,
    in the Supabase Table Editor. Without databaseApi the button stays hidden. */
 window.Rsvp = (function () {
-  function init(config, guestName) {
+  function init(config) {
     if (!config.databaseApi) return;
 
     const endpoint = config.databaseApi.replace(/\/+$/, "") + "/rsvp";
@@ -18,7 +18,6 @@ window.Rsvp = (function () {
     let sending = false;
 
     document.getElementById("rsvp-cta").hidden = false;
-    if (guestName) nameEl.value = guestName;
 
     function setStatus(text, isError) {
       status.textContent = text;
