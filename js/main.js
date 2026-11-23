@@ -71,7 +71,7 @@
 
   /* ---------- Simple text ---------- */
   const names = `${C.partner1} & ${C.partner2}`;
-  document.title = `You're invited! ${C.partner1} & ${C.partner2}'s Wedding`;
+  document.title = "You're invited!";
   document.querySelectorAll("[data-text]").forEach((node) => {
     node.textContent = C[node.dataset.text];
   });
