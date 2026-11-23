@@ -97,10 +97,6 @@ window.WEDDING = {
      on full volume. Raise it a little (0.25) if it feels too quiet. */
   musicVolume: 0.18,
 
-  /* How fast the page scrolls by itself while the music plays, in pixels per
-     second. 30 is a slow reading pace. Use 0 to turn it off. */
-  autoScrollSpeed: 30,
-
   /* Gift section. To remove it completely, change this to:  gift: null,
      qrImage: your QR code.
      Anyone with the link can see and save this QR code. */

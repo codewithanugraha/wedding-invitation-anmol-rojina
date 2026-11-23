@@ -257,10 +257,7 @@
     audio.preload = "none";
     $("music-btn").addEventListener("click", () => {
       if (wantMusic) muteMusic();
-      else {
-        playMusic(FADE_ON_UNMUTE);
-        holdUntil = 0; // turning the music back on restarts the scroll straight away
-      }
+      else playMusic(FADE_ON_UNMUTE);
     });
     // Stop while the guest is in another tab or app, and carry on when they return.
     document.addEventListener("visibilitychange", () => {
@@ -268,88 +265,6 @@
       if (document.hidden) audio.pause();
       else playMusic(FADE_ON_UNMUTE);
     });
-  }
-
-  /* ---------- Slow auto-scroll ----------
-     Runs while the music plays and steps aside whenever a guest is doing anything.
-     Reading a form or a sent message gets a longer wait than a quick scroll. */
-  const SCROLL_START_AFTER = 4500; // milliseconds, once the invitation appears
-  const RESUME_SHORT = 4000; // after scrolling, tapping, keys or moving the mouse
-  const RESUME_LONG = 8000; // after a form, pop-up, the map or scrolling back up
-  const ENGAGING_AREAS = "form, dialog, button, a, input, textarea, iframe, .gallery, .gift, .venue__map";
-  let holdUntil = 0;
-
-  function holdScroll(ms) {
-    holdUntil = Math.max(holdUntil, performance.now() + ms);
-  }
-
-  /* True for as long as the guest is in the middle of something. */
-  function guestIsBusy() {
-    const canHover = window.matchMedia("(hover: hover)").matches;
-    const selector =
-      "dialog[open], form[data-sending]" +
-      (canHover ? ", #wish-form:hover, .venue__map:hover, .gallery:hover, .gift:hover" : "");
-    return (
-      Boolean(document.querySelector(selector)) ||
-      document.activeElement.matches("input, textarea, iframe") ||
-      $("wish-message").value.trim() !== "" || // a wish they have started writing
-      String(window.getSelection()).trim() !== "" // text they have selected to copy
-    );
-  }
-
-  function startAutoScroll() {
-    const speed = Number(C.autoScrollSpeed) || 0;
-    if (!speed || reducedMotion) return;
-
-    const holdFor = (ms) => () => holdScroll(ms);
-    ["wheel", "touchstart", "touchmove", "keydown"].forEach((type) =>
-      window.addEventListener(type, holdFor(RESUME_SHORT), { passive: true })
-    );
-    window.addEventListener(
-      "pointermove",
-      (e) => {
-        if (e.pointerType === "mouse") holdScroll(RESUME_SHORT);
-      },
-      { passive: true }
-    );
-    window.addEventListener(
-      "pointerdown",
-      (e) => holdScroll(e.target.closest && e.target.closest(ENGAGING_AREAS) ? RESUME_LONG : RESUME_SHORT),
-      { passive: true }
-    );
-    document.addEventListener("submit", holdFor(RESUME_LONG), true);
-    document.addEventListener("focusout", holdFor(RESUME_LONG));
-    document.addEventListener("copy", holdFor(RESUME_LONG));
-    document.addEventListener("visibilitychange", holdFor(RESUME_SHORT));
-
-    holdScroll(SCROLL_START_AFTER);
-
-    let position = window.scrollY;
-    let previous = performance.now();
-
-    function step(now) {
-      const elapsed = Math.min(now - previous, 100);
-      previous = now;
-
-      // A scroll that was not ours: the scrollbar, or going back up to reread.
-      const moved = window.scrollY - position;
-      if (Math.abs(moved) > 3) holdScroll(moved < 0 ? RESUME_LONG : RESUME_SHORT);
-
-      // The wait restarts for as long as they stay busy, so the page never moves
-      // right after a form finishes sending or a message appears.
-      if (guestIsBusy()) holdScroll(RESUME_LONG);
-
-      const musicAllows = !C.music || wantMusic;
-      if (!musicAllows || now < holdUntil) {
-        position = window.scrollY;
-      } else {
-        const bottom = document.documentElement.scrollHeight - window.innerHeight;
-        position = Math.min(position + (speed * elapsed) / 1000, bottom);
-        window.scrollTo(0, position);
-      }
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
   }
 
   let opened = false;
@@ -366,7 +281,6 @@
         $("sheet").inert = false;
         $("music-btn").hidden = !C.music;
         window.scrollTo(0, 0);
-        startAutoScroll();
         cover.classList.add("is-gone");
         setTimeout(() => (cover.hidden = true), reducedMotion ? 0 : 800);
       },

@@ -149,7 +149,6 @@ window.Wishes = (function () {
     /* Send stays off until there is a name and a wish. */
     function refreshSubmit() {
       submit.disabled = sending || !nameEl.value.trim() || !messageEl.value.trim();
-      form.toggleAttribute("data-sending", sending); // tells auto-scroll to wait
     }
 
     // A wish is one short passage, so line breaks become spaces, including pasted ones.
