@@ -804,6 +804,7 @@
 
   /* ---------- Guest book and RSVP ---------- */
   // Guests type their own name in the forms: the ?name= link only addresses the envelope.
-  window.Wishes.init(C);
-  window.Rsvp.init(C);
+  // If either file failed to load, the rest of the page still works.
+  window.Wishes?.init(C);
+  window.Rsvp?.init(C);
 })();

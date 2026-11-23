@@ -631,8 +631,8 @@ textarea {
   position: absolute;
   z-index: 1;
   top: 25.2cqw;
-  left: 28cqw;
-  width: 44cqw;
+  left: 26cqw;
+  width: 48cqw;
   aspect-ratio: 1041 / 1203;
   filter: drop-shadow(0 0.4cqw 0.8cqw rgba(45, 50, 36, 0.08)) drop-shadow(0 1.8cqw 3.6cqw rgba(45, 50, 36, 0.14));
 }
@@ -679,7 +679,7 @@ textarea {
 .hero__names {
   position: relative;
   z-index: 2;
-  margin: 85.5cqw 0 7cqw;
+  margin: 90cqw 0 7cqw; /* clears the enlarged envelope by the same gap as before */
   font-family: var(--display);
   font-size: max(26px, 6.3cqw);
   font-weight: 400;
@@ -704,12 +704,12 @@ textarea {
 @media (max-width: 480px) {
   .tucked {
     top: 27.5cqw;
-    left: 24cqw;
-    width: 52cqw;
+    left: 21.5cqw;
+    width: 57cqw;
   }
 
   .hero__names {
-    margin-top: 92cqw;
+    margin-top: 97.8cqw;
   }
 }
 
@@ -748,7 +748,7 @@ textarea {
   position: relative;
   z-index: 1;
   padding: 34px 20px 36px;
-  border-radius: 12px;
+  border-radius: 18px; /* every card and the map share this rounding */
   background: var(--sage) url("../assets/art/paper-texture.webp");
   background-blend-mode: multiply;
   box-shadow: var(--shadow-md);
@@ -762,7 +762,7 @@ textarea {
 
 .card--white {
   padding: 32px 24px 24px;
-  border-radius: 24px;
+  border-radius: 18px;
   background: #fff;
   font-family: var(--sans);
   color: var(--ink);
@@ -1359,8 +1359,8 @@ textarea {
 .venue {
   position: relative;
   z-index: 1;
-  width: 88%;
-  max-width: 540px;
+  width: 83%; /* the same column as the cards */
+  max-width: 500px;
   margin: 0 auto 44px;
   text-align: center;
 }
@@ -1369,7 +1369,7 @@ textarea {
   margin-top: 14px;
   overflow: hidden;
   border: 1px solid var(--petal);
-  border-radius: 15px;
+  border-radius: 18px;
 }
 
 /* Quiets Google's bright map colours so they sit with the sage. */
