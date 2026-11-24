@@ -505,7 +505,8 @@ textarea {
   white-space: nowrap;
 }
 
-.cover__time svg {
+.cover__time svg,
+.event__time svg {
   display: inline-block;
   width: 0.8em;
   height: 0.8em;

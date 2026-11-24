@@ -315,7 +315,12 @@
   const service = C.events[0];
   const serviceItem = el("article", "event");
   serviceItem.append(
-    el("p", "event__time", service.time),
+    (() => {
+      const time = el("p", "event__time");
+      time.innerHTML = CLOCK_ICON; // fixed icon from this file
+      time.append(service.time);
+      return time;
+    })(),
     el("p", "event__venue", service.venue),
     el("p", "event__address", service.address)
   );
