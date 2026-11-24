@@ -365,7 +365,8 @@ textarea {
   border: 0;
   border-radius: 50%;
   background: url("../assets/art/wax-seal.webp") center / contain no-repeat;
-  filter: saturate(0.85) drop-shadow(0 1px 2px rgba(45, 50, 36, 0.22)) drop-shadow(0 5px 12px rgba(45, 50, 36, 0.2));
+  /* warmed from bronze to the same bright gold as the photo envelope's seal */
+  filter: saturate(1.3) hue-rotate(3deg) brightness(1.1) drop-shadow(0 1px 2px rgba(45, 50, 36, 0.22)) drop-shadow(0 5px 12px rgba(45, 50, 36, 0.2));
   transform: translate(-50%, -50%);
   cursor: pointer;
   transition: transform 0.35s ease, opacity 0.35s ease;
@@ -628,10 +629,24 @@ textarea {
   position: absolute;
   z-index: 1;
   top: 25.2cqw;
-  left: 26cqw;
-  width: 48cqw;
+  left: 22cqw;
+  width: 56cqw;
   aspect-ratio: 1041 / 1203;
-  filter: drop-shadow(0 0.4cqw 0.8cqw rgba(45, 50, 36, 0.08)) drop-shadow(0 1.8cqw 3.6cqw rgba(45, 50, 36, 0.14));
+  /* a tight contact shadow plus a wider soft one, so the envelope lifts off the paper */
+  filter: drop-shadow(0 0.3cqw 0.5cqw rgba(40, 46, 30, 0.22)) drop-shadow(0 2.2cqw 3.6cqw rgba(40, 46, 30, 0.26));
+}
+
+/* a soft pool of shade on the paper just under the envelope's bottom edge */
+.tucked::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: 4%;
+  bottom: -5%;
+  left: 4%;
+  height: 12%;
+  background: radial-gradient(50% 50% at 50% 40%, rgba(40, 46, 30, 0.32), rgba(40, 46, 30, 0) 100%);
+  pointer-events: none;
 }
 
 .tucked__back,
@@ -676,37 +691,28 @@ textarea {
 .hero__names {
   position: relative;
   z-index: 2;
-  margin: 90cqw 0 7cqw; /* clears the enlarged envelope by the same gap as before */
-  font-family: var(--display);
-  font-size: max(26px, 6.3cqw);
-  font-weight: 400;
-  line-height: 1.31;
-  text-transform: uppercase;
-  color: var(--sage);
-}
-
-.hero__names > span {
-  display: block;
-}
-
-.hero__names > .hero__and {
-  margin-block: 0.2em;
+  /* An empty spacer: it ends exactly at the envelope's bottom (top + 1.1556 × width),
+     then leaves the same gap as between the cards and the gallery heading. */
+  margin: 0;
+  padding-top: calc(89.9cqw + 74px);
   font-family: var(--serif);
-  font-size: max(16px, 0.42em);
-  line-height: 1.2;
-  text-transform: none;
+  font-size: max(20px, 4.2cqw);
+  font-weight: 400;
+  line-height: 1.3;
+  height: 0; /* left empty on purpose: only spaces the envelope from the first card */
+  color: var(--sage);
 }
 
 /* The envelope is the centrepiece, so it takes more of a phone's narrow width. */
 @media (max-width: 480px) {
   .tucked {
     top: 27.5cqw;
-    left: 21.5cqw;
-    width: 57cqw;
+    left: 17cqw;
+    width: 66cqw;
   }
 
   .hero__names {
-    margin-top: 97.8cqw;
+    padding-top: calc(103.8cqw + 62px);
   }
 }
 
@@ -714,8 +720,8 @@ textarea {
 .card-wrap {
   position: relative;
   z-index: 1;
-  width: 83%;
-  max-width: 500px;
+  width: max(78%, 266px); /* a little wider than the photo envelope above; small phones keep room for one-line text */
+  max-width: 450px;
   margin: 0 auto 44px;
 }
 
@@ -916,7 +922,7 @@ textarea {
   --dim: rgba(255, 255, 255, 0.94);
   --warm: var(--gold-ink);
   --hairline: rgba(255, 255, 255, 0.24);
-  padding: 44px 32px 46px;
+  padding: 44px 28px 46px;
 }
 
 .card:not(.card--white) .heading {
@@ -947,7 +953,7 @@ textarea {
 }
 
 .card--ceremony .family__name {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 1.4;
   color: var(--dim);
@@ -955,7 +961,7 @@ textarea {
 
 .card--ceremony .card__text {
   margin-top: 40px;
-  font-size: 17px;
+  font-size: 15.5px;
   line-height: 1.5;
   color: var(--dim);
 }
@@ -965,7 +971,7 @@ textarea {
 }
 
 .card--ceremony .couple__name {
-  font-size: 40px;
+  font-size: 33px;
   line-height: 1.12;
 }
 
@@ -977,12 +983,12 @@ textarea {
 }
 
 .card--ceremony .verse {
-  max-width: 300px;
+  max-width: 270px;
   margin-top: 40px;
 }
 
 .card--ceremony .verse__text {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--dim);
 }
@@ -992,13 +998,13 @@ textarea {
 }
 
 .card--ceremony .datebox {
-  column-gap: 18px;
-  max-width: 340px;
+  column-gap: 16px;
+  max-width: 300px;
   margin-top: 40px;
 }
 
 .card--ceremony .datebox__day {
-  font-size: 52px;
+  font-size: 44px;
 }
 
 .card--ceremony .datebox__side {
@@ -1007,23 +1013,23 @@ textarea {
 }
 
 .card--ceremony .events {
-  margin-top: 22px;
+  margin-top: 26px;
 }
 
 .card--ceremony .event__time {
   margin-top: 8px;
-  font-size: 22px;
+  font-size: 19px;
 }
 
 .card--ceremony .event__venue {
   margin-top: 6px;
-  font-size: 17px;
+  font-size: 15.5px;
   font-weight: 500;
 }
 
 .card--ceremony .event__address {
   margin-top: 3px;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--dim);
 }
 
@@ -1060,7 +1066,7 @@ textarea {
 
   .card--ceremony .card__text {
     margin-top: 32px;
-    font-size: 15px;
+    font-size: 14.5px;
     line-height: 1.45;
   }
 
@@ -1069,7 +1075,7 @@ textarea {
   }
 
   .card--ceremony .couple__name {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .card--ceremony .couple__and {
@@ -1082,7 +1088,7 @@ textarea {
   }
 
   .card--ceremony .verse__text {
-    font-size: 15px;
+    font-size: 14.5px;
     line-height: 1.45;
   }
 
@@ -1096,7 +1102,7 @@ textarea {
   }
 
   .card--ceremony .datebox__day {
-    font-size: 44px;
+    font-size: 40px;
   }
 
   .card--ceremony .datebox__side {
@@ -1111,7 +1117,7 @@ textarea {
 
   .card--ceremony .event__time {
     margin-top: 6px;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .card--ceremony .event__venue {
@@ -1120,7 +1126,7 @@ textarea {
   }
 
   .card--ceremony .event__address {
-    font-size: 14px;
+    font-size: 13.5px;
   }
 }
 
@@ -1356,8 +1362,8 @@ textarea {
 .venue {
   position: relative;
   z-index: 1;
-  width: 83%; /* the same column as the cards */
-  max-width: 500px;
+  width: max(78%, 266px); /* the same column as the cards */
+  max-width: 450px;
   margin: 0 auto 44px;
   text-align: center;
 }
@@ -2111,7 +2117,6 @@ textarea.panel__input {
 .timeline__start {
   margin-top: 8px;
   font-size: 17px;
-  font-style: italic;
   color: var(--dim);
 }
 
@@ -2119,7 +2124,6 @@ textarea.panel__input {
   display: block;
   margin-top: 4px;
   font-size: 14px;
-  font-style: italic;
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.72);
 }

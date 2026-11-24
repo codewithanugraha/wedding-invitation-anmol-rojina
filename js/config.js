@@ -22,7 +22,7 @@ window.WEDDING = {
   coverLine: "Together with their families",
 
   /* Invitation wording */
-  invitationText: "With thankful hearts to God, we invite you to witness our Holy Matrimony",
+  invitationText: "With thankful hearts to God, We invite you to witness the Holy Matrimony of",
 
   /* Bible verse shown under the couple's names. Swap it for your own choice:
      keep the wording exact and name the verse in the reference. */
