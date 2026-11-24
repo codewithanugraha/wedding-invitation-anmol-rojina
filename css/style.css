@@ -1183,6 +1183,36 @@ textarea {
   line-height: 1.2;
 }
 
+/* Nepali | English: a small two-way switch above the month */
+.calendar__toggle {
+  display: inline-flex;
+  gap: 2px;
+  margin-bottom: 14px;
+  padding: 3px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+}
+
+.calendar__switch {
+  min-width: 72px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.calendar__switch[aria-pressed="true"] {
+  background: var(--warm);
+  color: var(--sage-dark);
+}
+
 .calendar__grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -1210,6 +1240,18 @@ textarea {
 
 .calendar__day > span {
   position: relative;
+}
+
+/* Today: a thin underline under the number */
+.calendar__day.is-today > span::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  bottom: -3px;
+  left: -2px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--warm);
 }
 
 /* The wedding day: a warm filled heart */

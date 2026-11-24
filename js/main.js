@@ -315,7 +315,6 @@
   const service = C.events[0];
   const serviceItem = el("article", "event");
   serviceItem.append(
-    el("h3", "event__title", service.title),
     el("p", "event__time", service.time),
     el("p", "event__venue", service.venue),
     el("p", "event__address", service.address)
@@ -494,26 +493,80 @@
 
   (function buildCalendar() {
     const cal = $("calendar");
-    cal.append(el("p", "calendar__month", `${nepali.month} ${nepali.year}`));
+    const DAY = 86400000;
+    // "Today" as a plain date in Nepal, so the underline matches the calendar on the wall there.
+    const offsetMin = (() => {
+      const m = /^([+-])(\d\d):(\d\d)$/.exec(C.utcOffset || "+05:45");
+      return m ? (m[1] === "-" ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3])) : 345;
+    })();
+    const nowLocal = new Date(Date.now() + offsetMin * 60000);
+    const todayUTC = Date.UTC(nowLocal.getUTCFullYear(), nowLocal.getUTCMonth(), nowLocal.getUTCDate());
+
+    // Nepali month: the 1st is worked back from the wedding day.
+    const nepaliFirst = dateUTC.getTime() - (nepali.day - 1) * DAY;
+    const nepaliToday = Math.round((todayUTC - nepaliFirst) / DAY) + 1;
+    const views = {
+      nepali: {
+        label: `${nepali.month} ${nepali.year}`,
+        firstWeekday: new Date(nepaliFirst).getUTCDay(),
+        days: nepali.daysInMonth,
+        wedding: nepali.day,
+        today: nepaliToday,
+      },
+      english: {
+        label: fmt({ month: "long", year: "numeric" }),
+        firstWeekday: new Date(Date.UTC(year, month - 1, 1)).getUTCDay(),
+        days: new Date(Date.UTC(year, month, 0)).getUTCDate(),
+        wedding: day,
+        today: (() => {
+          const t = new Date(todayUTC);
+          return t.getUTCFullYear() === year && t.getUTCMonth() === month - 1 ? t.getUTCDate() : 0;
+        })(),
+      },
+    };
+
+    // Nepali | English switch: some guests follow the English calendar.
+    const toggle = el("div", "calendar__toggle");
+    toggle.setAttribute("role", "group");
+    toggle.setAttribute("aria-label", "Calendar");
+    const buttons = {};
+    [["nepali", "Nepali"], ["english", "English"]].forEach(([key, text]) => {
+      const b = el("button", "calendar__switch", text);
+      b.type = "button";
+      b.addEventListener("click", () => render(key));
+      buttons[key] = b;
+      toggle.append(b);
+    });
+    const monthLabel = el("p", "calendar__month");
     const grid = el("div", "calendar__grid");
-    // The Nepali week starts on Sunday.
-    ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].forEach((d) =>
-      grid.append(el("span", "calendar__dow", d))
-    );
-    // Works back from the wedding day's weekday to the weekday of the 1st.
-    const firstWeekday = (((dateUTC.getUTCDay() - (nepali.day - 1)) % 7) + 7) % 7;
-    for (let i = 0; i < firstWeekday; i++) grid.append(el("span"));
-    for (let d = 1; d <= nepali.daysInMonth; d++) {
-      const isWedding = d === nepali.day;
-      const cell = el("span", isWedding ? "calendar__day is-wedding" : "calendar__day");
-      if (isWedding) {
-        cell.innerHTML = HEART;
-        cell.setAttribute("aria-label", `${d}, our wedding day`);
+    cal.append(toggle, monthLabel, grid);
+
+    function render(key) {
+      const v = views[key];
+      Object.entries(buttons).forEach(([k, b]) => b.setAttribute("aria-pressed", String(k === key)));
+      monthLabel.textContent = v.label;
+      grid.replaceChildren();
+      // Both calendars start the week on Sunday.
+      ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].forEach((d) =>
+        grid.append(el("span", "calendar__dow", d))
+      );
+      for (let i = 0; i < v.firstWeekday; i++) grid.append(el("span"));
+      for (let d = 1; d <= v.days; d++) {
+        const isWedding = d === v.wedding;
+        const cell = el("span", isWedding ? "calendar__day is-wedding" : "calendar__day");
+        if (d === v.today) {
+          cell.classList.add("is-today");
+          cell.setAttribute("aria-current", "date");
+        }
+        if (isWedding) {
+          cell.innerHTML = HEART;
+          cell.setAttribute("aria-label", `${d}, our wedding day`);
+        }
+        cell.append(el("span", "", String(d)));
+        grid.append(cell);
       }
-      cell.append(el("span", "", String(d)));
-      grid.append(cell);
     }
-    cal.append(grid);
+    render("nepali");
   })();
 
   /* ---------- Add to calendar ---------- */
