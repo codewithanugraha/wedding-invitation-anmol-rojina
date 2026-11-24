@@ -291,25 +291,22 @@ textarea {
   left: 10%;
   width: max-content;
   max-width: 50%;
-  font-family: "Dawning of a New Day", cursive;
-  font-size: calc(var(--env-w) * var(--name-size, 0.06) * var(--name-fit, 1));
+  font-family: "Oooh Baby", cursive; /* flowing handwritten script */
+  font-size: calc(var(--env-w) * var(--name-size, 0.056) * var(--name-fit, 1));
   line-height: 1.15;
   text-align: left;
   text-wrap: balance;
   white-space: pre;
   color: var(--envelope-ink);
-  transform: rotate(-1.5deg);
+  font-weight: 400;
   /* Ink in the paper: the grain shows through the letters, and the edges stay sharp. */
   mix-blend-mode: multiply;
   opacity: 0.85;
-  /* The font comes in one thin weight, so a fine outline gives the pen stroke more body. */
-  -webkit-text-stroke: 0.3px currentColor;
 }
 
 @media (max-width: 640px) {
   .envelope__name {
-    --name-size: 0.07;
-    -webkit-text-stroke-width: 0.35px;
+    --name-size: 0.065;
   }
 }
 .envelope__flap {
@@ -2120,7 +2117,7 @@ textarea.panel__input {
 
 .timeline__note {
   display: block;
-  margin-top: 1px;
+  margin-top: 4px;
   font-size: 14px;
   font-style: italic;
   line-height: 1.35;
@@ -2150,8 +2147,7 @@ textarea.panel__input {
 
 /* Two simple rows, the venue and the parking, with a hairline between them. */
 .places {
-  margin-top: 18px;
-  border-block: 1px solid var(--petal);
+  margin-top: 10px;
   text-align: left;
 }
 
@@ -2229,6 +2225,45 @@ textarea.panel__input {
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* Phones: Directions moves under the text, so the name and address get the full width. */
+@media (max-width: 560px) {
+  .place {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 0;
+    align-items: start;
+    padding: 12px 0;
+  }
+
+  .place__icon {
+    grid-row: 1 / span 2;
+    margin-top: 2px;
+  }
+
+  .place__name {
+    font-size: 16px;
+  }
+
+  .place__detail {
+    font-size: 14px;
+  }
+
+  .place__link {
+    grid-column: 2;
+    justify-self: start;
+    min-height: 36px;
+    margin-left: -2px;
+  }
+}
+
+/* The smallest phones: a touch smaller still, so the address stays on one line. */
+@media (max-width: 360px) {
+  .place__detail {
+    font-size: 13px;
+  }
 }
 
 .venue__map {

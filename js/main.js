@@ -111,7 +111,7 @@
     };
     fitEnvelopeName();
     if (document.fonts && document.fonts.load) {
-      document.fonts.load('1em "Dawning of a New Day"').then(fitEnvelopeName, () => {});
+      document.fonts.load('1em "Oooh Baby"').then(fitEnvelopeName, () => {});
     }
   }
 

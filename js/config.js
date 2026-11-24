@@ -64,11 +64,15 @@ window.WEDDING = {
      Icons: chair, entrance, cross, rings, bible, star, heart, candle, cake, camera, dinner,
      music, toast */
   schedule: [
-    { title: "Welcome and worship", icon: "entrance" }, // guests seated, couple's entrance, prayer
-    { title: "Holy Matrimony and sermon", icon: "rings" },
-    { title: "Performances and thanksgiving", icon: "star" }, // talent show, dance, family thanks
-    { title: "Blessing and cake cutting", icon: "cake" },
-    { title: "Photos and wedding feast", icon: "dinner" },
+    {
+      title: "Bride and Groom's Entrance",
+      note: "Please be seated by 12:00 PM",
+      icon: "entrance",
+    }, // guests seated first, then the couple's entrance, prayer and worship
+    { title: "Holy Matrimony and Sermon", icon: "rings" },
+    { title: "Performances and Thanksgiving", icon: "star" }, // talent show, dance, family thanks
+    { title: "Blessing and Cake Cutting", icon: "cake" },
+    { title: "Photos and Wedding Feast", icon: "dinner" },
   ],
 
   /* Photos. Put your pictures in assets/photos and list them here.
