@@ -88,13 +88,17 @@
   });
 
   /* ---------- Guest name: share links like  yoursite.com/Pawan-Gurung ----------
-     vercel.json serves the invitation at any one-word address, and hyphens or
-     underscores in it become spaces. Older links like ?name=Pawan%20Gurung still work. */
+     vercel.json serves the invitation at any one-word address that is not a real
+     file. Hyphens and underscores become spaces, and a dot before a letter gets a
+     space after it: /Rev.David-Acharya reads "Rev. David Acharya".
+     Older links like ?name=Pawan%20Gurung still work. */
   const nameFromPath = (() => {
     const part = location.pathname.replace(/^\/+|\/+$/g, "");
-    if (!part || /[/.]/.test(part)) return "";
+    if (!part || part.includes("/") || part === "index.html") return "";
     try {
-      return decodeURIComponent(part).replace(/[-_]+/g, " ");
+      return decodeURIComponent(part)
+        .replace(/[-_]+/g, " ")
+        .replace(/\.(?=\p{L})/gu, ". ");
     } catch {
       return ""; // a broken %-code in the address
     }

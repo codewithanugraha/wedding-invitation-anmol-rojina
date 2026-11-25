@@ -2,7 +2,7 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/:guest((?!api$)[^/.]+)",
+      "source": "/:guest((?!api$)[^/]+)",
       "destination": "/index.html"
     }
   ],

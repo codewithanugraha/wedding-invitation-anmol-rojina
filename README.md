@@ -43,6 +43,7 @@ Add a guest's name to the end of your link, with a hyphen between the words. The
 
 ```
 https://your-site.vercel.app/Pawan-Gurung
+https://your-site.vercel.app/Rev.-David-Acharya
 ```
 
 Each guest's link is its own page to Messenger and WhatsApp, so the name stays in the link they receive. Older links written as `?name=Pawan%20Gurung` still work.
