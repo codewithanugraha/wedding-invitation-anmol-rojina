@@ -6,8 +6,7 @@
   --envelope: #acb397;
   --envelope-dark: #848a74;
   --petal: #d1d5c2;
-      --gold-ink: #f8f2df; /* soft cream writing on the sage cards */
-  --envelope-ink: #55402a; /* warm brown pen ink on the light envelope, near the wax */
+  --gold-ink: #f8f2df; /* soft cream writing on the sage cards */
   --olive: #5f6552;
   --ink: #3f4636;
   --line: rgba(132, 138, 116, 0.35);
@@ -297,11 +296,12 @@ textarea {
   text-align: left;
   text-wrap: balance;
   white-space: pre;
-  color: var(--envelope-ink);
+  /* White ink, like the cream flowers. A faint shadow keeps the thin script
+     readable on the light sage. */
+  color: #fffdf6;
   font-weight: 400;
-  /* Ink in the paper: the grain shows through the letters, and the edges stay sharp. */
-  mix-blend-mode: multiply;
-  opacity: 0.85;
+  opacity: 0.95;
+  text-shadow: 0 1px 1.5px rgba(60, 68, 46, 0.35);
 }
 
 @media (max-width: 640px) {
