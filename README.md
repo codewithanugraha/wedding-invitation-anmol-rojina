@@ -39,11 +39,13 @@ To test the forms on your computer, put the same values in `.env` and run `npx v
 
 ## 4. Send personal links
 
-Add a guest's name to the end of your link. The envelope then says "Pawan Gurung". Guests still type their own name in the guest book. Write `%20` for each space, because WhatsApp and other apps cut a link off at a real space:
+Add a guest's name to the end of your link, with a hyphen between the words. The envelope then says "Pawan Gurung". Guests still type their own name in the guest book.
 
 ```
-https://your-site.vercel.app/?name=Pawan%20Gurung
+https://your-site.vercel.app/Pawan-Gurung
 ```
+
+Each guest's link is its own page to Messenger and WhatsApp, so the name stays in the link they receive. Older links written as `?name=Pawan%20Gurung` still work.
 
 ## Good to know
 

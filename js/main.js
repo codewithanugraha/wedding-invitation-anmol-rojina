@@ -87,8 +87,19 @@
     node.replaceChildren(document.createTextNode(`${longDate} `), time);
   });
 
-  /* ---------- Guest name: share links like  yoursite.com/?name=Pawan%20Gurung ---------- */
-  const guestParam = (new URLSearchParams(location.search).get("name") || "")
+  /* ---------- Guest name: share links like  yoursite.com/Pawan-Gurung ----------
+     vercel.json serves the invitation at any one-word address, and hyphens or
+     underscores in it become spaces. Older links like ?name=Pawan%20Gurung still work. */
+  const nameFromPath = (() => {
+    const part = location.pathname.replace(/^\/+|\/+$/g, "");
+    if (!part || /[/.]/.test(part)) return "";
+    try {
+      return decodeURIComponent(part).replace(/[-_]+/g, " ");
+    } catch {
+      return ""; // a broken %-code in the address
+    }
+  })();
+  const guestParam = (nameFromPath || new URLSearchParams(location.search).get("name") || "")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 60);
