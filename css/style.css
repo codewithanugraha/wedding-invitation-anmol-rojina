@@ -753,12 +753,26 @@ textarea {
 }
 
 .card__link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 16px;
   padding: 6px;
   font-size: 18px;
   color: #fff;
   text-underline-offset: 4px;
+}
+
+/* The same opens-in-a-new-tab mark as the Directions links */
+.card__link svg {
+  flex: none;
+  width: 0.8em;
+  height: 0.8em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* Type levels in the sage cards:
