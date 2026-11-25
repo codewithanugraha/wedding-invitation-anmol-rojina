@@ -12,7 +12,7 @@ To preview it, double-click `index.html`.
 
 **Photos:** copy your pictures into `assets/photos`, then list them in `coverPhoto`, `heroPhoto` and `album` in the config file, for example `"assets/photos/our-photo.jpg"`. Keep each photo under about 500 KB so the page loads quickly on phones.
 
-**Link preview:** the text and image shown when the link is shared on WhatsApp or Facebook are near the top of `index.html`. Change them by hand. The image is `assets/art/share-image.jpg` (1200 x 630). If the site moves to a new address, update `og:url`, `og:image` and `twitter:image` there too, then refresh the preview in the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/).
+**Link preview:** the text and image shown when the link is shared on WhatsApp or Facebook are near the top of `index.html`. Change them by hand. The image is `assets/art/share-image.jpg` (1200 x 630). If the site moves to a new address, update `og:image`, `og:image:secure_url` and `twitter:image` there too, then refresh the preview in the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/). Don't add an `og:url`: Messenger would then drop the `?name=` from every shared link.
 
 ## 2. Connect the guest book (free)
 
