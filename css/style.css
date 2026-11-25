@@ -376,38 +376,6 @@ textarea {
   transform: translate(-50%, -50%) scale(1.06);
 }
 
-/* A quiet guide: one soft ring keeps leaving the seal.
-   It stops once the envelope opens, and stays off with reduced motion. */
-.seal::before {
-  content: "";
-  position: absolute;
-  inset: 3%;
-  border: 1.5px solid rgba(255, 255, 255, 0.85);
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
-  animation: seal-ring 1.2s ease-out infinite;
-}
-
-@keyframes seal-ring {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  12% {
-    opacity: 0.8;
-  }
-  60%,
-  100% {
-    opacity: 0;
-    transform: scale(1.55);
-  }
-}
-
-.cover.is-opening .seal::before {
-  animation: none;
-}
-
 .envelope {
   cursor: pointer;
 }
@@ -464,7 +432,7 @@ textarea {
   .seal {
     translate: -50% -50%;
     transform: none;
-    animation: seal-shake 1.2s ease-in-out infinite;
+    animation: seal-shake 1.8s ease-in-out 0.3s infinite;
   }
 
   .seal:hover {
@@ -477,26 +445,28 @@ textarea {
   }
 }
 
+/* A gentle nudge: the seal lifts a touch, sways a few times less each time,
+   settles, then rests before the next one. */
 @keyframes seal-shake {
   0%,
-  60%,
+  36%,
   100% {
     rotate: 0deg;
   }
-  10% {
-    rotate: -7deg;
+  6% {
+    rotate: -9deg;
   }
-  20% {
-    rotate: 6deg;
+  12% {
+    rotate: 7deg;
   }
-  30% {
+  18% {
     rotate: -5deg;
   }
-  40% {
+  24% {
     rotate: 3deg;
   }
-  50% {
-    rotate: -1deg;
+  30% {
+    rotate: -1.2deg;
   }
 }
 
@@ -1393,14 +1363,6 @@ textarea {
   opacity: 1;
 }
 
-/* ---------- RSVP button ---------- */
-.rsvp-cta {
-  position: relative;
-  z-index: 1;
-  margin: -20px 0 40px;
-  text-align: center;
-}
-
 /* ---------- Venue ---------- */
 .venue {
   position: relative;
@@ -1559,6 +1521,14 @@ textarea {
   color: var(--olive);
 }
 
+.wishes__more {
+  padding: 6px 0 4px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--olive);
+}
+
 .wish {
   padding: 14px 16px;
   border: 1.5px solid #e8ebdf;
@@ -1662,60 +1632,7 @@ textarea {
   color: var(--olive);
 }
 
-/* ---------- Pop-ups ---------- */
-.popup {
-  width: min(92vw, 480px);
-  max-height: 88vh;
-  padding: 0;
-  overflow: auto;
-  border: 0;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: var(--shadow-lg);
-  color: var(--ink);
-}
-
-.popup::backdrop {
-  background: rgba(63, 70, 54, 0.45);
-}
-
-/* ---------- RSVP pop-up (the .panel__ pieces are shared with the guest book) ---------- */
-.popup--rsvp {
-  border-radius: 24px;
-  font-family: var(--sans);
-}
-
-.rsvp {
-  padding: 32px 24px 24px;
-}
-
-.rsvp__close {
-  position: absolute;
-  z-index: 1;
-  top: 14px;
-  right: 14px;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: #eff1e8;
-  color: var(--olive);
-  cursor: pointer;
-}
-
-.rsvp__close svg,
-.rsvp__icon svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
+/* ---------- Guest book form pieces ---------- */
 .panel__title {
   padding-right: 44px;
   font-family: var(--serif);
@@ -1769,75 +1686,6 @@ textarea.panel__input {
   outline-offset: 0;
 }
 
-.rsvp__choices {
-  display: grid;
-  gap: 10px;
-  margin: 20px 0 0;
-  padding: 0;
-  border: 0;
-}
-
-.rsvp__choices .panel__label {
-  margin: 0 0 8px;
-}
-
-.rsvp__choice {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 14px;
-  border: 1.5px solid #e8ebdf;
-  border-radius: 16px;
-  background: #fbfcf8;
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--ink);
-  cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
-}
-
-.rsvp__choice input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.rsvp__icon {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e8ebdf;
-  color: var(--olive);
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.rsvp__choice:hover {
-  border-color: #d1d5c2;
-}
-
-.rsvp__choice:has(input:checked) {
-  border-color: var(--sage);
-  background: var(--tint);
-}
-
-.rsvp__choice:has(input:checked) .rsvp__icon {
-  background: var(--sage);
-  color: #fff;
-}
-
-.rsvp__choice:has(input:focus-visible) {
-  outline: 2px solid var(--sage-dark);
-  outline-offset: 2px;
-}
-
 .panel__status {
   margin-top: 14px;
   text-align: center;
@@ -1870,29 +1718,6 @@ textarea.panel__input {
   opacity: 1;
   transform: none;
   cursor: not-allowed;
-}
-
-.rsvp__done {
-  padding: 44px 24px 28px;
-  text-align: center;
-  outline: 0;
-}
-
-.rsvp__done .rsvp__icon {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 16px;
-  background: var(--sage);
-  color: #fff;
-}
-
-.rsvp__done .rsvp__icon svg {
-  width: 26px;
-  height: 26px;
-}
-
-.rsvp__done .panel__title {
-  padding-right: 0;
 }
 
 /* ---------- Closing ---------- */
@@ -2097,10 +1922,6 @@ textarea.panel__input {
 .gallery,
 .gift {
   padding-bottom: var(--section-gap);
-}
-
-.rsvp-cta {
-  margin: calc(24px - var(--section-gap)) 0 var(--section-gap);
 }
 
 /* Countdown and calendar */

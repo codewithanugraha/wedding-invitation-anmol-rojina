@@ -1,16 +1,37 @@
-/* GET: the visible wishes. POST: add a wish. */
+/* GET: one page of visible wishes, newest first. POST: add a wish.
+   GET ?before=<created_at>&id=<id> returns the page after that wish, as
+   { wishes: [...], more: true|false }. */
 const { supabase, isSameSite, cleanText, readBody, deny } = require("./_supabase");
 
 const FIELDS = "id,name,message,created_at";
 const MAX_WISH = 60; // about two lines on a phone; js/wishes.js has the same limit
+const PAGE_SIZE = 10; // js/wishes.js asks for the same number
+const TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?(Z|[+-]\d{2}:\d{2})$/;
+
+/* The filter for wishes older than the last one on screen. Wishes sent in the
+   same instant are told apart by id, so none is skipped or shown twice. */
+function afterFilter(query) {
+  const before = typeof query.before === "string" ? query.before : "";
+  const id = typeof query.id === "string" ? query.id : "";
+  if (!before && !id) return "";
+  if (!TIMESTAMP.test(before) || !/^\d{1,18}$/.test(id)) return null;
+  const at = `"${before}"`;
+  return "&or=" + encodeURIComponent(`(created_at.lt.${at},and(created_at.eq.${at},id.lt.${id}))`);
+}
 
 module.exports = async function handler(req, res) {
   try {
     if (req.method === "GET") {
-      const db = await supabase(`wishes?select=${FIELDS}&order=created_at.desc&limit=200`);
+      const filter = afterFilter(req.query || {});
+      if (filter === null) return deny(res, 400, "Invalid page");
+      // One extra row says whether there is another page.
+      const db = await supabase(
+        `wishes?select=${FIELDS}&order=created_at.desc,id.desc&limit=${PAGE_SIZE + 1}${filter}`
+      );
       if (!db.ok) throw new Error(`Supabase replied ${db.status}`);
+      const rows = await db.json();
       res.setHeader("Cache-Control", "no-store");
-      return res.status(200).json(await db.json());
+      return res.status(200).json({ wishes: rows.slice(0, PAGE_SIZE), more: rows.length > PAGE_SIZE });
     }
 
     if (req.method !== "POST") {

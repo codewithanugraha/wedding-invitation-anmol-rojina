@@ -757,14 +757,6 @@
     }
   }
 
-  /* ---------- Pop-ups close on the X or a tap outside ---------- */
-  document.querySelectorAll(".popup").forEach((dialog) => {
-    dialog.querySelector("[data-close]").addEventListener("click", () => dialog.close());
-    dialog.addEventListener("click", (e) => {
-      if (e.target === dialog) dialog.close();
-    });
-  });
-
   /* ---------- Gentle fade-in on scroll ---------- */
   const revealed = document.querySelectorAll(".reveal");
   if (reducedMotion || !("IntersectionObserver" in window)) {
@@ -784,9 +776,8 @@
     revealed.forEach((node) => observer.observe(node));
   }
 
-  /* ---------- Guest book and RSVP ---------- */
+  /* ---------- Guest book ---------- */
   // Guests type their own name in the forms: the ?name= link only addresses the envelope.
-  // If either file failed to load, the rest of the page still works.
+  // If that file failed to load, the rest of the page still works.
   window.Wishes?.init(C);
-  window.Rsvp?.init(C);
 })();

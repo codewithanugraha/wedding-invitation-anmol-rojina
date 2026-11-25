@@ -5,15 +5,22 @@ window.Wishes = (function () {
   const MAX_NAME = 60;
   const MAX_MESSAGE = 60; // about two lines on a phone; api/wishes.js has the same limit
   const REFRESH_MS = 60000;
+  const PAGE_SIZE = 10; // api/wishes.js sends the same number
   const LOCAL_KEY = "wedding-wishes-demo";
+
+  /* Newest first. Wishes sent in the same instant are ordered by id. */
+  function isOlder(a, b) {
+    if (a.created_at !== b.created_at) return a.created_at < b.created_at;
+    return Number(a.id) < Number(b.id);
+  }
 
   /* ---------- Storage back ends ---------- */
 
   function apiStore(base) {
     const endpoint = base.replace(/\/+$/, "") + "/wishes";
 
-    async function request(options) {
-      const res = await fetch(endpoint, {
+    async function request(options, query) {
+      const res = await fetch(endpoint + (query ? "?" + query : ""), {
         ...options,
         // Older phones and in-app browsers lack this timeout helper.
         signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
@@ -23,7 +30,12 @@ window.Wishes = (function () {
     }
 
     return {
-      list: () => request(),
+      // With a wish, the page after it; without, the newest page.
+      list: (after) =>
+        request(
+          undefined,
+          after && new URLSearchParams({ before: after.created_at, id: String(after.id) })
+        ),
       add: (wish) =>
         request({
           method: "POST",
@@ -42,7 +54,10 @@ window.Wishes = (function () {
       }
     }
     return {
-      list: async () => read(),
+      list: async (after) => {
+        const older = read().filter((wish) => !after || isOlder(wish, after));
+        return { wishes: older.slice(0, PAGE_SIZE), more: older.length > PAGE_SIZE };
+      },
       add: async (wish) => {
         const saved = { id: Date.now(), created_at: new Date().toISOString(), ...wish };
         try {
@@ -78,9 +93,23 @@ window.Wishes = (function () {
     document.getElementById("wish-demo").hidden = connected;
 
     let wishes = [];
+    let more = false; // whether older wishes are still to be fetched
     let hasLoaded = false;
     let loading = false;
+    let loadingMore = false;
+    let moreFailed = false;
     let sending = false;
+
+    // Fetches the next page as the end of the list scrolls near.
+    const nearEnd =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            (entries) => {
+              if (entries.some((entry) => entry.isIntersecting)) loadMore();
+            },
+            { root: listEl, rootMargin: "0px 0px 160px 0px" }
+          )
+        : null;
 
 
     function setStatus(text, isError) {
@@ -106,27 +135,69 @@ window.Wishes = (function () {
     /* Guests' words are only ever set with textContent, so nothing they
        type can run as code on the page. */
     function render() {
+      nearEnd?.disconnect();
       if (!wishes.length) return placeholder("Be the first to leave a wish 💚");
 
-      listEl.replaceChildren(
-        ...wishes.map((wish) => {
-          const card = document.createElement("article");
-          card.className = "wish";
-          const message = document.createElement("p");
-          message.className = "wish__message";
-          message.textContent = wish.message;
-          const meta = document.createElement("p");
-          meta.className = "wish__meta";
-          const who = document.createElement("strong");
-          who.textContent = wish.name;
-          const when = document.createElement("time");
-          when.textContent = formatDate(wish.created_at);
-          when.dateTime = wish.created_at;
-          meta.append(who, when);
-          card.append(message, meta);
-          return card;
-        })
-      );
+      const cards = wishes.map((wish) => {
+        const card = document.createElement("article");
+        card.className = "wish";
+        const message = document.createElement("p");
+        message.className = "wish__message";
+        message.textContent = wish.message;
+        const meta = document.createElement("p");
+        meta.className = "wish__meta";
+        const who = document.createElement("strong");
+        who.textContent = wish.name;
+        const when = document.createElement("time");
+        when.textContent = formatDate(wish.created_at);
+        when.dateTime = wish.created_at;
+        meta.append(who, when);
+        card.append(message, meta);
+        return card;
+      });
+
+      if (more) cards.push(moreRow());
+      listEl.replaceChildren(...cards);
+    }
+
+    /* The last row while older wishes remain: it loads them when scrolled to,
+       or offers a button if that failed or the browser can't watch scrolling. */
+    function moreRow() {
+      const row = document.createElement("p");
+      row.className = "wishes__more";
+      if (moreFailed || !nearEnd) {
+        if (moreFailed) row.append("Older wishes could not be loaded. ");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "link-btn";
+        button.textContent = moreFailed ? "Try again" : "Show older wishes";
+        button.addEventListener("click", () => {
+          moreFailed = false;
+          loadMore();
+        });
+        row.append(button);
+      } else {
+        row.textContent = "Loading more wishes…";
+        nearEnd.observe(row);
+      }
+      return row;
+    }
+
+    async function loadMore() {
+      if (!more || loadingMore || !wishes.length) return;
+      loadingMore = true;
+      try {
+        const page = await store.list(wishes[wishes.length - 1]);
+        const shown = new Set(wishes.map((wish) => String(wish.id)));
+        wishes = wishes.concat(page.wishes.filter((wish) => !shown.has(String(wish.id))));
+        more = page.more;
+      } catch (err) {
+        console.error(err);
+        moreFailed = true;
+      } finally {
+        loadingMore = false;
+        render();
+      }
     }
 
     async function load(showProgress) {
@@ -134,7 +205,18 @@ window.Wishes = (function () {
       loading = true;
       if (showProgress) placeholder("Loading wishes…");
       try {
-        wishes = await store.list();
+        const page = await store.list();
+        if (!hasLoaded || !page.more) {
+          wishes = page.wishes;
+          more = page.more;
+        } else {
+          // A refresh replaces the newest page and keeps the older wishes
+          // already scrolled to, so the list doesn't jump back.
+          const oldest = page.wishes[page.wishes.length - 1];
+          const kept = wishes.filter((wish) => isOlder(wish, oldest));
+          wishes = page.wishes.concat(kept);
+          if (!kept.length) more = true;
+        }
         hasLoaded = true;
         render();
       } catch (err) {

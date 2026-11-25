@@ -1,6 +1,6 @@
 # Wedding Invitation
 
-A simple HTML, CSS and JavaScript invitation with an opening envelope, 3D photo gallery, countdown, RSVP form, guest book and gift QR code. There is nothing to install or build.
+A simple HTML, CSS and JavaScript invitation with an opening envelope, 3D photo gallery, countdown, guest book and gift QR code. There is nothing to install or build.
 
 ## 1. Add your details
 
@@ -14,7 +14,7 @@ To preview it, double-click `index.html`.
 
 **Link preview:** the text and image shown when the link is shared on WhatsApp or Facebook are near the top of `index.html`. Change them by hand. The image is `assets/art/share-image.jpg` (1200 x 630). If the site moves to a new address, update `og:url`, `og:image` and `twitter:image` there too, then refresh the preview in the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/).
 
-## 2. Connect the guest book and RSVP (free)
+## 2. Connect the guest book (free)
 
 1. Create a free project at [supabase.com](https://supabase.com).
 2. Open **SQL Editor**, paste in everything from `supabase-setup.sql`, and press **Run**.
@@ -23,11 +23,9 @@ To preview it, double-click `index.html`.
 
 The forms talk to the server functions in `api/`, so the key never reaches a guest's browser. **Never use the `secret` or `service_role` key.**
 
-**Seeing who is coming:** open **Table Editor** and choose `rsvps`. Only you can read this table; guests can send a response but can't see anyone's.
+**Added to an existing project?** Run `supabase-setup.sql` again. It is safe to repeat and keeps your existing wishes.
 
-**Added to an existing project?** Run `supabase-setup.sql` again. It is safe to repeat and keeps your existing wishes and responses.
-
-**Removing a wish:** open **Table Editor**, choose `wishes`, and set `hidden` to `true` on that row. It disappears from the page within a minute. Deleting the row also works.
+**Removing a wish:** open **Table Editor**, choose `wishes`, and set `hidden` to `true` on that row. It disappears from the newest wishes within a minute, and from older ones the next time the page is opened. Deleting the row also works.
 
 **Before you send the invitation out:** free Supabase projects can pause after about a week without activity. If the guest book says it could not be loaded, open your project in Supabase and restore it. Open the invitation yourself every few days until the wedding is over.
 
@@ -41,7 +39,7 @@ To test the forms on your computer, put the same values in `.env` and run `npx v
 
 ## 4. Send personal links
 
-Add a guest's name to the end of your link. The envelope then says "Pawan Gurung". Guests still type their own name in the guest book and RSVP forms. Write `%20` for each space, because WhatsApp and other apps cut a link off at a real space:
+Add a guest's name to the end of your link. The envelope then says "Pawan Gurung". Guests still type their own name in the guest book. Write `%20` for each space, because WhatsApp and other apps cut a link off at a real space:
 
 ```
 https://your-site.vercel.app/?name=Pawan%20Gurung

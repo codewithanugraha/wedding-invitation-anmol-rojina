@@ -116,7 +116,7 @@ window.WEDDING = {
   closingVerseText: "This is the day which the LORD hath made; we will rejoice and be glad in it.",
   closingVerseReference: "Psalm 118:24",
 
-  /* Where the guest book and RSVP send their data: the server functions in api/.
+  /* Where the guest book sends its data: the server functions in api/.
      The database key stays on the server (see README.md). */
   databaseApi: "/api",
 };
