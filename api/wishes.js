@@ -4,6 +4,20 @@
 const { supabase, isSameSite, cleanText, readBody, deny } = require("./_supabase");
 
 const FIELDS = "id,name,message,created_at";
+/* A guest's name: letters in any language (Nepali included), spaces and
+   . ' - & , ( ). Up to 40 characters, no word over 20 letters, no letter
+   four times in a row, and a dot only before a space ("Rev. David"), so
+   links, numbers and junk are turned away. js/wishes.js and api/wishes.js
+   share this rule. */
+const MAX_NAME = 40;
+function nameProblem(name) {
+  if (!name) return "Please enter your name.";
+  if (name.length > MAX_NAME) return "Please keep your name under " + MAX_NAME + " characters.";
+  if (!/^[\p{L}\p{M}][\p{L}\p{M} .'\u2019&,()-]*$/u.test(name)) return "Please use letters only in your name.";
+  if (name.split(" ").some((word) => word.length > 20) || /(\p{L})\1{3}|\.\S/u.test(name))
+    return "That doesn't look like a name. Please check it.";
+  return "";
+}
 const MAX_WISH = 60; // about two lines on a phone; js/wishes.js has the same limit
 const PAGE_SIZE = 10; // js/wishes.js asks for the same number
 const TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?(Z|[+-]\d{2}:\d{2})$/;
@@ -41,12 +55,14 @@ module.exports = async function handler(req, res) {
     if (!isSameSite(req)) return deny(res, 403, "Not allowed");
 
     const body = readBody(req);
-    const name = cleanText(body.name, 60);
+    const name =
+      typeof body.name === "string" ? body.name.trim().replace(/\s+/g, " ") : "";
+    if (nameProblem(name)) return deny(res, 400, "Please enter a valid name");
     const message = cleanText(
       typeof body.message === "string" ? body.message.replace(/\s+/g, " ") : null,
       MAX_WISH
     );
-    if (!name || !message) return deny(res, 400, "A name and a wish are required");
+    if (!message) return deny(res, 400, "A wish is required");
 
     const db = await supabase(`wishes?columns=name,message&select=${FIELDS}`, {
       method: "POST",

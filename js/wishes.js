@@ -2,7 +2,20 @@
    the database key never reaches the browser. If config.js has no databaseApi
    it falls back to this browser's storage, so the page can still be tried out. */
 window.Wishes = (function () {
-  const MAX_NAME = 60;
+  /* A guest's name: letters in any language (Nepali included), spaces and
+     . ' - & , ( ). Up to 40 characters, no word over 20 letters, no letter
+     four times in a row, and a dot only before a space ("Rev. David"), so
+     links, numbers and junk are turned away. js/wishes.js and api/wishes.js
+     share this rule. */
+  const MAX_NAME = 40;
+  function nameProblem(name) {
+    if (!name) return "Please enter your name.";
+    if (name.length > MAX_NAME) return "Please keep your name under " + MAX_NAME + " characters.";
+    if (!/^[\p{L}\p{M}][\p{L}\p{M} .'\u2019&,()-]*$/u.test(name)) return "Please use letters only in your name.";
+    if (name.split(" ").some((word) => word.length > 20) || /(\p{L})\1{3}|\.\S/u.test(name))
+      return "That doesn't look like a name. Please check it.";
+    return "";
+  }
   const MAX_MESSAGE = 60; // about two lines on a phone; api/wishes.js has the same limit
   const REFRESH_MS = 60000;
   const PAGE_SIZE = 10; // api/wishes.js sends the same number
@@ -248,6 +261,7 @@ window.Wishes = (function () {
     ["input", "change"].forEach((type) =>
       form.addEventListener(type, () => {
         setStatus("");
+        nameEl.removeAttribute("aria-invalid");
         refreshSubmit();
       })
     );
@@ -257,7 +271,13 @@ window.Wishes = (function () {
       refreshSubmit();
       if (submit.disabled) return;
 
-      const name = nameEl.value.trim().slice(0, MAX_NAME);
+      const name = nameEl.value.trim().replace(/\s+/g, " ");
+      const problem = nameProblem(name);
+      if (problem) {
+        nameEl.setAttribute("aria-invalid", "true");
+        nameEl.focus();
+        return setStatus(problem, true);
+      }
       const message = messageEl.value.trim().slice(0, MAX_MESSAGE);
 
       // A filled trap field means a bot: look successful and save nothing.

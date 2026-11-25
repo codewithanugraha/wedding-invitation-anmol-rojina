@@ -1488,9 +1488,16 @@ textarea {
   line-height: 1.45;
 }
 
+/* The label with the character count at its right */
+.form__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .form__count {
-  margin-top: 6px;
-  text-align: right;
+  flex: none;
   font-size: 13px;
   color: var(--olive);
 }
@@ -1557,6 +1564,7 @@ textarea {
 }
 
 .wish__meta strong {
+  overflow-wrap: anywhere; /* older names saved before the name rule */
   font-weight: 500;
   color: var(--ink);
 }
@@ -1684,6 +1692,12 @@ textarea.panel__input {
   border-color: var(--sage);
   outline: 2px solid var(--sage);
   outline-offset: 0;
+}
+
+/* A name that failed the check, still marked while the guest fixes it */
+.panel__input[aria-invalid="true"] {
+  border-color: #9a4a3c;
+  outline-color: #9a4a3c;
 }
 
 .panel__status {

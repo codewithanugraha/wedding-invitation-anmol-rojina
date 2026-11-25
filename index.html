@@ -176,12 +176,14 @@
           </p>
 
           <form id="wish-form" novalidate>
-            <label class="panel__label" for="wish-name">Your name</label>
-            <input class="panel__input" id="wish-name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Enter your name" required />
+            <label class="panel__label" for="wish-name">Your Name</label>
+            <input class="panel__input" id="wish-name" name="name" type="text" maxlength="40" autocomplete="name" placeholder="Enter Your Name" required />
 
-            <label class="panel__label" for="wish-message">Your wish</label>
-            <textarea class="panel__input" id="wish-message" name="message" rows="2" maxlength="60" placeholder="Write your wish" required></textarea>
-            <p class="form__count" id="wish-count" aria-live="off">0 / 60</p>
+            <div class="form__row">
+              <label class="panel__label" for="wish-message">Your Wish</label>
+              <p class="form__count" id="wish-count" aria-live="off">0 / 60</p>
+            </div>
+            <textarea class="panel__input" id="wish-message" name="message" rows="2" maxlength="60" placeholder="Write Your Wish" required></textarea>
 
             <!-- Hidden from people. Bots that fill it in are ignored. -->
             <div class="form__trap" aria-hidden="true">
@@ -190,7 +192,7 @@
             </div>
 
             <p class="panel__status" id="wish-status" role="status"></p>
-            <button class="btn btn--block panel__submit" id="wish-submit" type="submit" disabled>Send wishes</button>
+            <button class="btn btn--block panel__submit" id="wish-submit" type="submit" disabled>Send Wishes</button>
           </form>
 
           <div class="wishes" id="wish-list" aria-live="polite" aria-label="Wishes"></div>
