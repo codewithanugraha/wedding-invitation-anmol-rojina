@@ -608,8 +608,18 @@
   const mapsDirections = (q) =>
     `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(q)}`;
   const mapsEmbed = (q) => `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
-  const mapsWalkEmbed = (from, to) =>
-    `https://www.google.com/maps?saddr=${encodeURIComponent(from)}&daddr=${encodeURIComponent(to)}&dirflg=w&z=18&output=embed`;
+  /* The walking route. With two "lat,lng" points this is Google's own embed address,
+     loaded straight away. Other place names use the older address, which Google
+     redirects, and that extra step can fail in phone in-app browsers. */
+  const mapsWalkEmbed = (from, to) => {
+    const point = (text) => /^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/.exec(text);
+    const a = point(from);
+    const b = point(to);
+    if (a && b) {
+      return `https://www.google.com/maps/embed?origin=mfe&pb=!1m11!4m9!3e2!4m3!3m2!1d${a[1]}!2d${a[2]}!4m3!3m2!1d${b[1]}!2d${b[2]}!6i18`;
+    }
+    return `https://www.google.com/maps?saddr=${encodeURIComponent(from)}&daddr=${encodeURIComponent(to)}&dirflg=w&z=18&output=embed`;
+  };
   /* The venue, and where to park if that is elsewhere, each with its own Directions link. */
   const ICON_VENUE =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.8 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.3"/></svg>';
@@ -664,7 +674,9 @@
     // One map: the walk between the two when there is separate parking, else the venue.
     const frame = document.createElement("iframe");
     frame.title = parking ? `Map of the walk from the parking to ${venueEvent.venue}` : `Map to ${venueEvent.venue}`;
-    frame.loading = "lazy";
+    // Loads with the page rather than waiting to be scrolled near: some phone
+    // browsers start lazy frames late or not at all, leaving an empty box.
+    frame.loading = "eager";
     frame.referrerPolicy = "strict-origin-when-cross-origin"; // keeps ?name= out of what Google receives
     frame.src = parking ? mapsWalkEmbed(parking.walkFrom, parking.mapQuery) : mapsEmbed(venueEvent.mapQuery);
     $("map-frame").replaceChildren(frame);
